@@ -1,239 +1,52 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>comond</title>
-
-<style>
-body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%; /* لضمان أن الصفحة تأخذ كامل الارتفاع */
-    width: 100%;
-    font-family: sans-serif;
-    background-color: #fff;
-}
-
-.form-container {
-    width: 100%;
-    min-height: 100vh; /* يغطي كامل ارتفاع الشاشة */
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* تمركز أفقي */
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-form {
-    width: 100%;
-    max-width: 500px; /* يحافظ على شكل جميل في الشاشات الكبيرة */
-    display: flex;
-    flex-direction: column;
-}
-
-h1 {
-    text-align: center;
-    margin-top: 20px;
-    margin-bottom: 30px;
-    color: #222;
-    font-size: 26px;
-}
-
-input, select {
-    width: 100%;
-    margin-bottom: 15px;
-    padding: 15px; /* زيادة التباعد لجعلها أسهل للمس */
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    font-size: 16px;
-    box-sizing: border-box;
-    text-align: right;
-    background-color: #f9f9f9;
-}
-
-button {
-    width: 100%;
-    padding: 18px;
-    background-color: darkgreen;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-/* تحسينات للشاشات الصغيرة جداً */
-@media (max-width: 480px) {
-    .form-container {
-        padding: 15px;
-    }
-    h1 {
-        font-size: 22px;
-    }
-}
-
-
-</style>
-  </head>
-
-  <body>
-    <div class="form-container">
-      
-    <h1>🛒 طلب شراء</h1>
-
-      <form onsubmit="sendData(event)" method="post" action="javascript:void(0)">
-
-        <input type="text" id="name" placeholder="الإسم الكامل" required>
-        <input type="tel" id="phone" placeholder="رقم الهاتف" required>
-
-        <select id="الولاية" onchange="updateCommune()" required>
-          <option value="">الولاية</option>
-          <option value="16">16 - الجزائر</option>
-          <option value="22">22 - سيدي بلعباس</option>
-          <option value="13">13 - تلمسان</option>
-        </select>
-
-        <select id="البلدية" required>
-          <option value="">البلدية</option>
-        </select>
-
-        <select id="quantity" required>
-          <option value="">الكمية</option>
-          <option value="1 séré de 6 pieces">1 séré de 6 pieces</option>
-          <option value="1 séré de 8 pieces">1 séré de 8 pieces</option>
-          <option value="1 séré de 12 pieces">1 séré de 12 pieces</option>
-        </select>
-
- <select id="delivery" required>
-  <option value="">مكان التوصيل</option>
-
-  <option value="إلى منزل">🏠 إلى منزل</option>
-
-  <option value="إلى مكتب شركة التوصيل">🏬 إلى مكتب شركة التوصيل</option>
-</select>
-
-        <button type="submit" id="submitBtn">إرسال الطلب</button>
-
-      </form>
+    <title>متجري - طلب شراء</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .iframe-wrapper {
+            width: 100%;
+            max-width: 550px;
+            margin: 20px auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            background: white;
+        }
+        iframe {
+            width: 100%;
+            height: 650px;
+            border: none;
+            display: block;
+        }
+        @media (max-width: 600px) {
+            .iframe-wrapper {
+                margin: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            iframe {
+                height: 100vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="iframe-wrapper">
+        <iframe src="اhttps://script.google.com/macros/s/AKfycbxuHHAXplSR4O-5yhsznHDve8MDV2lu_DIT6_C_Hj_LZdT4Xm94a4FTEglCp0_0j92E/exec"></iframe>
     </div>
-
-<script>
-function updateCommune() {
-
-  let wilaya = document.getElementById("الولاية").value;
-  let commune = document.getElementById("البلدية");
-
-  commune.innerHTML = '<option value="">البلدية</option>';
-
-  let data = {
-    "16": ["باب الزوار", "حيدرة", "بئر مراد رايس"],
-    "22": ["سيدي بلعباس", "تلاغ", "راس الماء"],
-    "13": ["تلمسان", "مغنية", "الغزوات"]
-  };
-
-  if (data[wilaya]) {
-    data[wilaya].forEach(function(name) {
-      let option = document.createElement("option");
-      option.value = name;
-      option.textContent = name;
-      commune.appendChild(option);
-    });
-  }
-}
-
-function sendData(e){
-  if(e) e.preventDefault();
-
-  let btn = document.getElementById("submitBtn");
-
-  let name = document.getElementById("name").value;
-  let phone = document.getElementById("phone").value;
-  let wilayaSelect = document.getElementById("الولاية");
-  let wilayaValue = wilayaSelect.value;
-
-  let wilayaMap = {
-    "16": "الجزائر",
-    "22": "سيدي بلعباس",
-    "13": "تلمسان"
-  };
-
-  let wilaya = wilayaMap[wilayaValue] || wilayaValue;
-
-  let commune = document.getElementById("البلدية").value;
-  let quantity = document.getElementById("quantity").value;
-  let delivery = document.getElementById("delivery").value;
-
-  if(!name || !phone || !wilayaValue || !commune || !quantity || !delivery){
-    showMessage("الرجاء ملء جميع المعلومات");
-    return;
-  }
-
-  if(!/^(05|06|07)[0-9]{8}$/.test(phone)){
-    showMessage("رقم الهاتف غير صحيح");
-    return;
-  }
-
-  btn.disabled = true;
-  btn.textContent = "جاري الإرسال...";
-
-  google.script.run
-    .withSuccessHandler(function(){
-
-      showMessage("تم الإرسال ✔");
-
-      btn.textContent = "تم الإرسال ✔";
-      btn.style.backgroundColor = "gray";
-
-      document.querySelector("form").reset();
-      document.getElementById("البلدية").innerHTML =
-        '<option value="">البلدية</option>';
-
-      setTimeout(() => {
-        btn.disabled = false;
-        btn.textContent = "إرسال الطلب";
-        btn.style.backgroundColor = "darkgreen";
-      }, 3000);
-
-    })
-    .withFailureHandler(function(){
-      showMessage("خطأ ❌");
-
-      btn.disabled = false;
-      btn.textContent = "إرسال الطلب";
-    })
-    .saveData({
-      name,
-      phone,
-      wilaya,
-      commune,
-      quantity,
-      delivery
-    });
-}
-
-function showMessage(msg){
-  let div = document.createElement("div");
-  div.textContent = msg;
-
-  div.style.position = "fixed";
-  div.style.bottom = "20px";
-  div.style.right = "20px";
-  div.style.background = "green";
-  div.style.color = "white";
-  div.style.padding = "15px 20px";
-  div.style.borderRadius = "10px";
-  div.style.zIndex = "9999";
-
-  document.body.appendChild(div);
-
-  setTimeout(() => {
-    div.remove();
-  }, 3000);
-}
-</script>
-
-  </body>
+</body>
 </html>

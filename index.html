@@ -179,17 +179,50 @@ function sendData(e){
   btn.disabled = true;
   btn.textContent = "جاري الإرسال...";
 
-  google.script.run
-    .withSuccessHandler(function(){
+  // 1. ضع رابط الـ Web App الذي حصلت عليه من جوجل بين العلامتين
+  const scriptURL = 'https://script.google.com/macros/s/AKfycbyLA3-ecd0D06ikrYlenSLzHIdzTPE26TTVtNVdpkdQLiRSvhRL0_ZaxF4YFWFsfjVj/exec';
 
-      showMessage("تم الإرسال ✔");
+  // 2. إرسال البيانات باستخدام fetch
+  fetch(scriptURL, {
+    method: 'POST',
+    mode: 'no-cors', // لتجنب مشاكل الحماية بين المواقع
+    cache: 'no-cache',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      name: name,
+      phone: phone,
+      wilaya: wilaya,
+      commune: commune,
+      quantity: quantity,
+      delivery: delivery
+    })
+  })
+  .then(function() {
+    // هذا الجزء هو "SuccessHandler" البديل
+    showMessage("تم الإرسال ✔");
 
-      btn.textContent = "تم الإرسال ✔";
-      btn.style.backgroundColor = "gray";
+    btn.textContent = "تم الإرسال ✔";
+    btn.style.backgroundColor = "gray";
 
-      document.querySelector("form").reset();
-      document.getElementById("البلدية").innerHTML =
-        '<option value="">البلدية</option>';
+    document.querySelector("form").reset();
+    document.getElementById("البلدية").innerHTML = '<option value="">البلدية</option>';
+
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = "إرسال الطلب";
+      btn.style.backgroundColor = "darkgreen";
+    }, 3000);
+  })
+  .catch(function(error) {
+    // هذا الجزء هو "FailureHandler" البديل
+    showMessage("خطأ ❌ أعد المحاولة");
+    btn.disabled = false;
+    btn.textContent = "إرسال الطلب";
+    console.error('Error!', error.message);
+  });
+
 
       setTimeout(() => {
         btn.disabled = false;

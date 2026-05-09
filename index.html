@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>متجر احترافي - سلة الأسعار | تصميم شكر أنيق</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        :root {
+            --accent-color: #2563eb; 
+            --text-dark: #1e293b;
+            --gray-border: #e2e8f0;
+            --white: #ffffff;
+            --price-bg: #eff6ff;
+        }
+
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            margin: 0; padding: 0; 
+            background: var(--white); 
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* حاوية المنتج */
+        .product-card { 
+            width: 100vw; 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+        }
+
+        /* الصورة الكبيرة - حجم أكبر */
+        .main-image-container { 
+            width: 100%; 
+            height: 58vh;
+            background-color: #f1f5f9; 
+            cursor: zoom-in;
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+        .main-image-container img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            transition: transform 0.2s;
+        }
+
+        /* الصور المصغرة */
+        .thumbnail-list { 
+            display: flex; 
+            justify-content: center; 
+            gap: 10px; 
+            margin: 8px 0 6px 0; 
+            padding: 0 10px; 
+        }
+        .thumb-item { 
+            width: 80px; 
+            height: 60px; 
+            border-radius: 14px; 
+            overflow: hidden; 
+            cursor: pointer; 
+            border: 2px solid transparent; 
+            transition: 0.1s;
+            background: #f8fafc;
+        }
+        .thumb-item.active { border-color: var(--accent-color); transform: scale(0.96);}
+        .thumb-item img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* رأس المنتج: الاسم بجانب السلة */
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 20px 0px 20px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .product-title { 
+            font-size: 20px; 
+            font-weight: 800; 
+            margin: 0; 
+            line-height: 1.3;
+            color: #0f172a;
+            flex: 2;
+            letter-spacing: -0.2px;
+        }
+        
+        /* سلة الأسعار الجانبية */
+        .price-basket {
+            background: var(--price-bg);
+            border-radius: 44px;
+            padding: 5px 14px 5px 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+            border: 1px solid rgba(37,99,235,0.25);
+            direction: rtl;
+            flex-shrink: 0;
+        }
+        .basket-icon {
+            font-size: 22px;
+            background: white;
+            width: 38px;
+            height: 38px;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .dynamic-price-area {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        .price-label {
+            font-size: 10px;
+            color: #4b5563;
+            letter-spacing: 0.2px;
+            font-weight: 600;
+        }
+        .price-now-dynamic {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--accent-color);
+            line-height: 1.2;
+        }
+        .price-now-dynamic small {
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* خيارات الكمية */
+        .options-section { 
+            padding: 4px 20px 0 20px; 
+            margin-bottom: 8px; 
+        }
+        select#productCount {
+            width: 100%; 
+            height: 48px; 
+            padding: 0 16px; 
+            border-radius: 16px; 
+            border: 2px solid var(--gray-border);
+            font-family: 'Cairo'; 
+            font-size: 16px; 
+            font-weight: 600;
+            background: #f9fafb url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat left 14px center / 18px;
+            appearance: none;
+            cursor: pointer;
+            color: #1e293b;
+        }
+        select#productCount:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            background-color: #ffffff;
+        }
+
+        /* زر الشراء */
+        .btn-buy { 
+            width: calc(100% - 40px); 
+            margin: 8px auto 10px auto; 
+            background-color: var(--accent-color); 
+            color: white; 
+            padding: 15px; 
+            border-radius: 50px; 
+            border: none; 
+            font-family: 'Cairo'; 
+            font-weight: bold; 
+            font-size: 18px; 
+            cursor: pointer;
+            transition: 0.12s;
+            box-shadow: 0 6px 12px rgba(37,99,235,0.2);
+        }
+        .btn-buy:active { transform: scale(0.97); background-color: #1d4ed8;}
+
+        /* شارات الثقة */
+        .trust-badges {
+            display: flex;
+            justify-content: space-around;
+            margin: 6px 20px 10px 20px;
+            padding: 12px 12px;
+            background: #f9fafb;
+            border-radius: 22px;
+            gap: 8px;
+        }
+        .badge-item {
+            text-align: center;
+            font-size: 12px;
+            color: #2c3e50;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        /* Lightbox التكبير */
+        .lightbox {
+            display: none; position: fixed; z-index: 4000; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.96);
+            justify-content: center; align-items: center;
+        }
+        .lightbox-content-wrapper { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+        .lightbox img { max-width: 95%; max-height: 85%; object-fit: contain; border-radius: 16px; }
+        .close-lb { position: absolute; top: 20px; right: 25px; color: white; font-size: 44px; cursor: pointer; z-index: 4001; font-weight: 300; }
+        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.2); backdrop-filter: blur(5px); color: white; border: none; padding: 12px 16px; cursor: pointer; font-size: 28px; z-index: 4002; border-radius: 60px; transition: 0.1s; }
+        .prev-btn { right: 15px; } .next-btn { left: 15px; }
+
+        /* مودال الطلب */
+        .order-modal {
+            display: none; position: fixed; z-index: 3000; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.75);
+            justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: white; width: 90%; max-width: 420px; padding: 24px 20px;
+            border-radius: 32px; box-sizing: border-box;
+            max-height: 90vh; overflow-y: auto;
+            box-shadow: 0 25px 40px rgba(0,0,0,0.25);
+        }
+        .order-modal input, .order-modal select {
+            width: 100%; padding: 12px 20px; margin-bottom: 15px; border-radius: 18px; border: 1.5px solid #e2e8f0; font-family: 'Cairo'; box-sizing: border-box;
+            font-size: 15px;
+        }
+        .order-modal input:focus, .order-modal select:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(37,99,235,0.1);
+        }
+        .btn-submit { width: 100%; background: #10b981; color: white; padding: 15px; border: none; border-radius: 50px; font-weight: bold; font-size: 17px; cursor: pointer; margin-top: 8px; transition: 0.1s; }
+        .btn-submit:active { transform: scale(0.98); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .close-modal-icon { font-size: 32px; cursor: pointer; font-weight: 400; line-height: 1; color: #64748b; transition: 0.1s; }
+        .close-modal-icon:hover { color: #0f172a; }
+        h3 { margin:0; font-weight: 800; font-size: 1.4rem; }
+
+        /* === نافذة الشكر الجديدة: إطار أبيض، زوايا منحنية، خلفية بيضاء ناصعة === */
+        .custom-thankyou-modal {
+            display: none;
+            position: fixed;
+            z-index: 5000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(3px);
+        }
+        .thankyou-card {
+            background: #ffffff;       /* إطار أبيض ناصع */
+            width: 85%;
+            max-width: 400px;
+            border-radius: 48px;       /* زوايا منحنية كبيرة (ناعمة) */
+            padding: 32px 24px 40px;
+            text-align: center;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.35);
+            border: none;
+            transition: all 0.2s ease;
+            direction: rtl;
+            font-family: 'Cairo', sans-serif;
+        }
+        .thankyou-card .emoji-big {
+            font-size: 64px;
+            display: block;
+            margin-bottom: 12px;
+        }
+        .thankyou-card h2 {
+            font-size: 28px;
+            font-weight: 800;
+            color: #0f2b3d;
+            margin: 10px 0 12px;
+        }
+        /* نص رسالة الشكر كما هي دون تعديل */
+        .thankyou-message {
+            font-size: 18px;
+            color: #2c3e50;
+            line-height: 1.55;
+            margin: 18px 0 20px;
+            font-weight: 500;
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 28px;
+        }
+        .thankyou-card .btn-close-thanks {
+            background-color: var(--accent-color);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 60px;
+            cursor: pointer;
+            width: 80%;
+            margin-top: 12px;
+            font-family: 'Cairo';
+            transition: 0.1s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        .thankyou-card .btn-close-thanks:active {
+            transform: scale(0.97);
+            background-color: #1e40af;
+        }
+    </style>
+</head>
+<body>
+
+<div class="product-card">
+    <!-- الصورة الكبيرة بحجم أكبر -->
+    <div class="main-image-container" onclick="openLightbox()">
+        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1000" id="currentMainImg" alt="منتج مميز">
+    </div>
+
+    <div class="thumbnail-list">
+        <div class="thumb-item active" onclick="changeImage(0, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1000')"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=150" alt="thumb1"></div>
+        <div class="thumb-item" onclick="changeImage(1, 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1000')"><img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=150" alt="thumb2"></div>
+        <div class="thumb-item" onclick="changeImage(2, 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1000')"><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=150" alt="thumb3"></div>
+        <div class="thumb-item" onclick="changeImage(3, 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=1000')"><img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=150" alt="thumb4"></div>
+    </div>
+
+    <!-- رأس المنتج: الاسم بجانب السلة -->
+    <div class="product-header">
+        <h2 class="product-title">⌚ ساعة رياضية ذكية - إصدار فاخر</h2>
+        <div class="price-basket" id="priceBasket">
+            <div class="basket-icon">🛒</div>
+            <div class="dynamic-price-area">
+                <span class="price-label">المجموع</span>
+                <span class="price-now-dynamic" id="dynamicPriceDisplay">4500 DA</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- شارات الثقة -->
+    <div class="trust-badges">
+        <div class="badge-item">🚚 شحن مجاني<br>لكامل التراب</div>
+        <div class="badge-item">🤝 دفع عند الاستلام<br>آمن 100%</div>
+        <div class="badge-item">⭐ ضمان الجودة<br>والإستبدال</div>
+    </div>
+
+    <!-- خيارات الكمية -->
+    <div class="options-section">
+        <select id="productCount">
+            <option value="" disabled>📦 اختر العبوة المناسبة لك</option>
+            <option value="6" data-price="4500">🔥 سيرية 6 قطع - 4500 DA</option>
+            <option value="8" data-price="6300">🚀 سيرية 8 قطع - 6300 DA</option>
+            <option value="12" data-price="7500">💎 سيرية 12 قطعة - 7500 DA (الأفضل)</option>
+        </select>
+    </div>
+
+    <button class="btn-buy" onclick="openOrderModal()">🛍️ أطلب الآن - الدفع عند الإستلام</button>
+</div>
+
+<!-- Lightbox -->
+<div id="myLightbox" class="lightbox">
+    <span class="close-lb" onclick="closeLightbox()">&times;</span>
+    <div class="lightbox-content-wrapper">
+        <button class="nav-btn prev-btn" onclick="moveSlide(1)">&#10095;</button>
+        <img id="lightboxImg" alt="تكبير">
+        <button class="nav-btn next-btn" onclick="moveSlide(-1)">&#10094;</button>
+    </div>
+</div>
+
+<!-- مودال الطلب مع ولايات وبلديات -->
+<div id="orderModal" class="order-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>📋 تفاصيل الطلب</h3>
+            <span onclick="closeOrderModal()" class="close-modal-icon">&times;</span>
+        </div>
+        <form id="purchaseForm">
+            <input type="text" id="fullName" placeholder="الاسم الكامل (ثلاثي)" required>
+            <input type="tel" id="phone" placeholder="رقم الجوال 📱 مثال: 0556789123" required>
+            <select id="stateSelect" onchange="updateMunicipalities()" required>
+                <option value="" disabled selected>🏢 إختر الولاية - Wilaya</option>
+            </select>
+            <select id="municipalitySelect" disabled required>
+                <option value="" disabled selected>🏘️ إختر البلدية - Commune</option>
+            </select>
+            <input type="text" id="address" placeholder="العنوان الكامل (الشارع، رقم البيت، الحي)" required>
+            <input type="text" id="notes" placeholder="ملاحظات إضافية (اختياري)">
+            <button type="submit" class="btn-submit">✔️ تأكيد الطلب وإرسال</button>
+        </form>
+        <p style="font-size: 12px; color: #5b6e8c; text-align: center; margin-top: 14px;">سيتواصل معكم فريقنا لتأكيد الطلب خلال 24 ساعة</p>
+    </div>
+</div>
+
+<!-- ===== نافذة شكر بيضاء جديدة بإطار منحنٍ (بديل عن التنبيه الأسود) ===== -->
+<div id="customThankyouModal" class="custom-thankyou-modal">
+    <div class="thankyou-card">
+        <span class="emoji-big">🎉✅</span>
+        <h2>شكراً لك!</h2>
+        <!-- نفس نص رسالة الشكر الأصلية دون تعديل -->
+        <div class="thankyou-message">
+            🎉 تم استلام طلبك بنجاح! 🎉
+        </div>
+        <button class="btn-close-thanks" onclick="closeThankYouModal()">إغلاق</button>
+    </div>
+</div>
+
+<script>
+    // --- جميع الوظائف السابقة تبقى كما هي، مع تعديل بسيط في دالة إرسال الطلب ---
+    
+    // ------------------ نظام السلة الديناميكي ------------------
+    const countSelect = document.getElementById('productCount');
+    const dynamicPriceSpan = document.getElementById('dynamicPriceDisplay');
+    
+    function updatePriceFromSelection() {
+        const selectedOption = countSelect.options[countSelect.selectedIndex];
+        if (!selectedOption || !selectedOption.value) {
+            dynamicPriceSpan.innerHTML = `--- DA`;
+            return;
+        }
+        const priceValue = selectedOption.getAttribute('data-price');
+        if (priceValue) {
+            dynamicPriceSpan.innerHTML = `${parseInt(priceValue).toLocaleString()} DA`;
+        } else {
+            const text = selectedOption.innerText;
+            const match = text.match(/(\d+)\s*DA/);
+            if(match) dynamicPriceSpan.innerHTML = `${match[1]} DA`;
+            else dynamicPriceSpan.innerHTML = `? DA`;
+        }
+    }
+    
+    function setDefaultSelect() {
+        for(let i = 0; i < countSelect.options.length; i++) {
+            if(countSelect.options[i].value !== "") {
+                countSelect.selectedIndex = i;
+                updatePriceFromSelection();
+                break;
+            }
+        }
+    }
+    countSelect.addEventListener('change', updatePriceFromSelection);
+    setDefaultSelect();
+    
+    // ------------------ معرض الصور ------------------
+    const images = [
+        'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200',
+        'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1200',
+        'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1200',
+        'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=1200'
+    ];
+    let currentIndex = 0;
+    
+    function changeImage(index, url) {
+        currentIndex = index;
+        document.getElementById('currentMainImg').src = url;
+        const thumbs = document.querySelectorAll('.thumb-item');
+        thumbs.forEach((t, i) => t.classList.toggle('active', i === index));
+    }
+    
+    function openLightbox() {
+        document.getElementById("myLightbox").style.display = "flex";
+        updateLightbox();
+    }
+    function closeLightbox() { document.getElementById("myLightbox").style.display = "none"; }
+    function moveSlide(dir) {
+        currentIndex += dir;
+        if (currentIndex >= images.length) currentIndex = 0;
+        if (currentIndex < 0) currentIndex = images.length - 1;
+        updateLightbox();
+        document.getElementById('currentMainImg').src = images[currentIndex];
+        const thumbs = document.querySelectorAll('.thumb-item');
+        thumbs.forEach((t, i) => t.classList.toggle('active', i === currentIndex));
+    }
+    function updateLightbox() { document.getElementById("lightboxImg").src = images[currentIndex]; }
+    
+    // ------------------ بيانات الولايات والبلديات ------------------
+    const states = [
+        { id: "16", ar: "الجزائر", fr: "Alger" },
+        { id: "23", ar: "عنابة", fr: "Annaba" },
+        { id: "31", ar: "وهران", fr: "Oran" },
+        { id: "01", ar: "أدرار", fr: "Adrar" },
+        { id: "17", ar: "البليدة", fr: "Blida" }
+    ];
+    const munisData = {
+        "16": ["سيدي محمد", "بئر مراد رايس", "الحراش", "باب الزوار", "القبة", "بن عكنون"],
+        "23": ["عنابة", "الحجار", "برحال", "سرايدي", "سيدي عمار", "الزيتونة"],
+        "31": ["وهران", "بئر الجير", "السانية", "قديل", "بوتليليس", "مرسى الكبير"],
+        "01": ["أدرار", "تامنطيت", "رقان", "تيميمون", "أولف"],
+        "17": ["البليدة", "بوفاريك", "العفرون", "موزاية", "الشبلي"]
+    };
+    
+    const stateSelect = document.getElementById("stateSelect");
+    states.forEach(s => {
+        let opt = document.createElement("option");
+        opt.value = s.id;
+        opt.textContent = `${s.id} - ${s.ar} - ${s.fr}`;
+        stateSelect.appendChild(opt);
+    });
+    
+    window.updateMunicipalities = function() {
+        const mSelect = document.getElementById("municipalitySelect");
+        const selectedId = stateSelect.value;
+        mSelect.innerHTML = '<option value="" disabled selected>🏡 إختر البلدية - Commune</option>';
+        if (selectedId && munisData[selectedId]) {
+            mSelect.disabled = false;
+            munisData[selectedId].forEach(m => {
+                let opt = document.createElement("option");
+                opt.value = m;
+                opt.textContent = m;
+                mSelect.appendChild(opt);
+            });
+        } else {
+            mSelect.disabled = true;
+        }
+    };
+    
+    function openOrderModal() {
+        const selectedVal = countSelect.value;
+        if(!selectedVal || selectedVal === "") {
+            alert("⚠️ يرجى تحديد الكمية أولاً (اختر 6، 8 أو 12 قطعة)");
+            return;
+        }
+        document.getElementById("orderModal").style.display = "flex";
+    }
+    
+    function closeOrderModal() { document.getElementById("orderModal").style.display = "none"; }
+    
+    // نافذة الشكر الأنيقة (إطار أبيض، زوايا منحنية)
+    function showCustomThankyou() {
+        const thankyouModal = document.getElementById("customThankyouModal");
+        thankyouModal.style.display = "flex";
+    }
+    
+    function closeThankYouModal() {
+        document.getElementById("customThankyouModal").style.display = "none";
+    }
+    
+    // تحسين تجربة التركيز
+    const focusElements = document.querySelectorAll('#purchaseForm input, #purchaseForm select');
+    focusElements.forEach(el => {
+        el.addEventListener('focus', (e) => {
+            setTimeout(() => {
+                e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 200);
+        });
+    });
+    
+    window.onclick = (e) => {
+        if (e.target.id === "myLightbox") closeLightbox();
+        if (e.target.id === "orderModal") closeOrderModal();
+        if (e.target.id === "customThankyouModal") closeThankYouModal();
+    };
+    
+    // ------------------ معالجة إرسال الطلب إلى Google Sheet عبر google.script.run ------------------
+    document.getElementById('purchaseForm').onsubmit = (e) => {
+        e.preventDefault();
+        
+        // 1. جمع البيانات من النموذج
+        const productTitle = "⌚ ساعة رياضية ذكية - إصدار فاخر";
+        const quantityElem = countSelect.options[countSelect.selectedIndex];
+        const quantity = quantityElem ? quantityElem.value : "غير محدد";
+        const totalPrice = dynamicPriceSpan.innerText;
+        
+        const fullName = document.getElementById('fullName').value;
+        const phone = document.getElementById('phone').value;
+        const wilaya = stateSelect.options[stateSelect.selectedIndex]?.text || "غير محدد";
+        const baladia = document.getElementById("municipalitySelect")?.value || "غير محدد";
+        const address = document.getElementById('address').value;
+        const notes = document.getElementById('notes').value;
+        
+        // 2. التحقق من صحة البيانات الأساسية
+        if(!fullName || !phone){
+            alert("يرجى إدخال الاسم الكامل ورقم الهاتف بشكل صحيح.");
+            return;
+        }
+        if(!stateSelect.value || !document.getElementById("municipalitySelect").value) {
+            alert("الرجاء اختيار الولاية والبلدية.");
+            return;
+        }
+        
+        // 3. تجهيز كائن البيانات لإرساله إلى الخادم
+        const orderData = {
+            productTitle: productTitle,
+            quantity: quantity,
+            totalPrice: totalPrice,
+            fullName: fullName,
+            phone: phone,
+            wilaya: wilaya,
+            baladia: baladia,
+            address: address,
+            notes: notes
+        };
+        
+        // 4. إرسال البيانات إلى الدالة saveOrder في الخادم (Code.gs)
+        google.script.run
+            .withSuccessHandler(function(response) {
+                // في حال نجاح الحفظ
+                console.log("نجاح:", response);
+                closeOrderModal();      // إغلاق مودال الطلب
+                showCustomThankyou();   // إظهار نافذة الشكر
+                // (اختياري) يمكنك إعادة تعيين الحقول هنا إذا أردت
+                // document.getElementById('purchaseForm').reset();
+            })
+            .withFailureHandler(function(error) {
+                // في حال فشل الحفظ
+                console.error("خطأ:", error);
+                alert("😥 حدث خطأ أثناء حفظ طلبك. يرجى المحاولة مرة أخرى أو الاتصال بالدعم.\n" + error.message);
+            })
+            .saveOrder(orderData); // استدعاء الدالة في الخادم
+    };
+    
+    // ربط الدوال العامة (لتكون متاحة من الـ HTML)
+    window.changeImage = changeImage;
+    window.openLightbox = openLightbox;
+    window.closeLightbox = closeLightbox;
+    window.moveSlide = moveSlide;
+    window.openOrderModal = openOrderModal;
+    window.closeOrderModal = closeOrderModal;
+    window.closeThankYouModal = closeThankYouModal;
+</script>
+</body>
+          </html>

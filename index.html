@@ -7,331 +7,136 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
-        :root {
-            --accent-color: #2563eb; 
-            --text-dark: #1e293b;
-            --gray-border: #e2e8f0;
-            --white: #ffffff;
-            --price-bg: #eff6ff;
-        }
-
-        body { 
-            font-family: 'Cairo', sans-serif; 
-            margin: 0; padding: 0; 
-            background: var(--white); 
-            color: var(--text-dark);
-            overflow-x: hidden;
-        }
-
-        .product-card { 
-            width: 100vw; 
-            height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            overflow: hidden; 
-        }
-
-        .main-image-container { 
-            width: 100%; 
-            height: 58vh;
-            background-color: #f1f5f9; 
-            cursor: zoom-in;
-            display: flex; 
-            justify-content: center; 
-            align-items: center;
-            overflow: hidden;
-            transition: all 0.2s;
-        }
-        .main-image-container img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            transition: transform 0.2s;
-        }
-
-        .thumbnail-list { 
-            display: flex; 
-            justify-content: center; 
-            gap: 10px; 
-            margin: 8px 0 6px 0; 
-            padding: 0 10px; 
-        }
-        .thumb-item { 
-            width: 80px; 
-            height: 60px; 
-            border-radius: 14px; 
-            overflow: hidden; 
-            cursor: pointer; 
-            border: 2px solid transparent; 
-            transition: 0.1s;
-            background: #f8fafc;
-        }
-        .thumb-item.active { border-color: var(--accent-color); transform: scale(0.96);}
+        :root { --accent-color: #2563eb; --text-dark: #1e293b; --gray-border: #e2e8f0; --white: #ffffff; --price-bg: #eff6ff; }
+        body { font-family: 'Cairo', sans-serif; margin: 0; padding: 0; background: var(--white); color: var(--text-dark); overflow-x: hidden; }
+        .product-card { width: 100vw; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        .main-image-container { width: 100%; height: 58vh; background-color: #f1f5f9; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        .main-image-container img { width: 100%; height: 100%; object-fit: cover; }
+        .thumbnail-list { display: flex; justify-content: center; gap: 10px; margin: 8px 0 6px 0; padding: 0 10px; }
+        .thumb-item { width: 80px; height: 60px; border-radius: 14px; overflow: hidden; border: 2px solid transparent; cursor: pointer; }
+        .thumb-item.active { border-color: var(--accent-color); }
         .thumb-item img { width: 100%; height: 100%; object-fit: cover; }
-
-        .product-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 20px 0px 20px;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .product-title { 
-            font-size: 20px; 
-            font-weight: 800; 
-            margin: 0; 
-            line-height: 1.3;
-            color: #0f172a;
-            flex: 2;
-            letter-spacing: -0.2px;
-        }
-        
-        .price-basket {
-            background: var(--price-bg);
-            border-radius: 44px;
-            padding: 5px 14px 5px 20px;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.04);
-            border: 1px solid rgba(37,99,235,0.25);
-            direction: rtl;
-            flex-shrink: 0;
-        }
-        .basket-icon {
-            font-size: 22px;
-            background: white;
-            width: 38px;
-            height: 38px;
-            border-radius: 40px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .dynamic-price-area {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-        }
-        .price-label {
-            font-size: 10px;
-            color: #4b5563;
-            letter-spacing: 0.2px;
-            font-weight: 600;
-        }
-        .price-now-dynamic {
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--accent-color);
-            line-height: 1.2;
-        }
-        .price-now-dynamic small {
-            font-size: 11px;
-            font-weight: 700;
-        }
-
-        .options-section { 
-            padding: 4px 20px 0 20px; 
-            margin-bottom: 8px; 
-        }
-        select#productCount {
-            width: 100%; 
-            height: 48px; 
-            padding: 0 16px; 
-            border-radius: 16px; 
-            border: 2px solid var(--gray-border);
-            font-family: 'Cairo'; 
-            font-size: 16px; 
-            font-weight: 600;
-            background: #f9fafb url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat left 14px center / 18px;
-            appearance: none;
-            cursor: pointer;
-            color: #1e293b;
-        }
-
-        .btn-buy { 
-            width: calc(100% - 40px); 
-            margin: 8px auto 10px auto; 
-            background-color: var(--accent-color); 
-            color: white; 
-            padding: 15px; 
-            border-radius: 50px; 
-            border: none; 
-            font-family: 'Cairo'; 
-            font-weight: bold; 
-            font-size: 18px; 
-            cursor: pointer;
-            transition: 0.12s;
-            box-shadow: 0 6px 12px rgba(37,99,235,0.2);
-        }
-
-        .trust-badges {
-            display: flex;
-            justify-content: space-around;
-            margin: 6px 20px 10px 20px;
-            padding: 12px 12px;
-            background: #f9fafb;
-            border-radius: 22px;
-            gap: 8px;
-        }
-        .badge-item {
-            text-align: center;
-            font-size: 12px;
-            color: #2c3e50;
-            font-weight: 600;
-            line-height: 1.4;
-        }
-
-        /* Lightbox & Modals */
-        .lightbox, .order-modal, .custom-thankyou-modal {
-            display: none; position: fixed; z-index: 3000; top: 0; left: 0;
-            width: 100%; height: 100%; justify-content: center; align-items: center;
-        }
-        .lightbox { background: rgba(0,0,0,0.96); z-index: 4000; }
-        .order-modal { background: rgba(0,0,0,0.75); }
-        .custom-thankyou-modal { background: rgba(0,0,0,0.6); backdrop-filter: blur(3px); z-index: 5000; }
-
-        .modal-content, .thankyou-card {
-            background: white; width: 90%; max-width: 420px; padding: 24px 20px;
-            border-radius: 32px; box-sizing: border-box;
-        }
-        .thankyou-card { border-radius: 48px; text-align: center; padding: 32px 24px 40px; }
-
-        .order-modal input, .order-modal select {
-            width: 100%; padding: 12px 20px; margin-bottom: 15px; border-radius: 18px; border: 1.5px solid #e2e8f0; font-family: 'Cairo';
-        }
-        .btn-submit, .btn-close-thanks {
-            width: 100%; background: #10b981; color: white; padding: 15px; border: none; border-radius: 50px; font-weight: bold; cursor: pointer;
-        }
-        .btn-close-thanks { background-color: var(--accent-color); width: 80%; margin-top: 12px; }
+        .product-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 20px 0px 20px; gap: 12px; }
+        .product-title { font-size: 20px; font-weight: 800; margin: 0; color: #0f172a; flex: 2; }
+        .price-basket { background: var(--price-bg); border-radius: 44px; padding: 5px 14px 5px 20px; display: inline-flex; align-items: center; gap: 10px; border: 1px solid rgba(37,99,235,0.25); }
+        .dynamic-price-area { display: flex; flex-direction: column; align-items: flex-end; }
+        .price-now-dynamic { font-size: 20px; font-weight: 800; color: var(--accent-color); }
+        .options-section { padding: 4px 20px 0 20px; margin-bottom: 8px; }
+        select#productCount, .order-modal select, .order-modal input { width: 100%; height: 48px; padding: 0 16px; border-radius: 16px; border: 2px solid var(--gray-border); font-family: 'Cairo'; font-size: 16px; margin-bottom: 10px; }
+        .btn-buy { width: calc(100% - 40px); margin: 8px auto 10px auto; background-color: var(--accent-color); color: white; padding: 15px; border-radius: 50px; border: none; font-family: 'Cairo'; font-weight: bold; font-size: 18px; cursor: pointer; }
+        .order-modal, .custom-thankyou-modal { display: none; position: fixed; z-index: 5000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; }
+        .modal-content, .thankyou-card { background: white; width: 90%; max-width: 420px; padding: 24px 20px; border-radius: 32px; }
+        .btn-submit { width: 100%; background: #10b981; color: white; padding: 15px; border: none; border-radius: 50px; font-weight: bold; font-size: 17px; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="product-card">
-    <div class="main-image-container" onclick="openLightbox()">
-        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1000" id="currentMainImg" alt="منتج Taipo chop">
-    </div>
-
+    <div class="main-image-container"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1000" id="currentMainImg"></div>
     <div class="thumbnail-list">
-        <div class="thumb-item active" onclick="changeImage(0, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1000')"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=150"></div>
-        <div class="thumb-item" onclick="changeImage(1, 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1000')"><img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=150"></div>
-        <div class="thumb-item" onclick="changeImage(2, 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1000')"><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=150"></div>
-        <div class="thumb-item" onclick="changeImage(3, 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=1000')"><img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=150"></div>
+        <div class="thumb-item active" onclick="changeImg('https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1000', this)"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=150"></div>
+        <div class="thumb-item" onclick="changeImg('https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1000', this)"><img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=150"></div>
     </div>
 
     <div class="product-header">
         <h2 class="product-title">⌚ ساعة رياضية ذكية - Taipo chop</h2>
         <div class="price-basket">
-            <div class="basket-icon">🛒</div>
-            <div class="dynamic-price-area">
-                <span class="price-label">المجموع</span>
-                <span class="price-now-dynamic" id="dynamicPriceDisplay">4500 DA</span>
-            </div>
+            <div class="dynamic-price-area"><span class="price-now-dynamic" id="dynamicPriceDisplay">4500 DA</span></div>
         </div>
-    </div>
-
-    <div class="trust-badges">
-        <div class="badge-item">🚚 شحن مجاني</div>
-        <div class="badge-item">🤝 دفع عند الاستلام</div>
-        <div class="badge-item">⭐ ضمان الجودة</div>
     </div>
 
     <div class="options-section">
         <select id="productCount">
             <option value="6" data-price="4500">🔥 سيرية 6 قطع - 4500 DA</option>
             <option value="8" data-price="6300">🚀 سيرية 8 قطع - 6300 DA</option>
-            <option value="12" data-price="7500">💎 سيرية 12 قطعة - 7500 DA</option>
         </select>
     </div>
-
-    <button class="btn-buy" onclick="openOrderModal()">🛍️ أطلب الآن - الدفع عند الإستلام</button>
+    <button class="btn-buy" onclick="document.getElementById('orderModal').style.display='flex'">🛍️ أطلب الآن</button>
 </div>
 
-<!-- Modals -->
+<!-- مودال الطلب مع نظام الولايات الكامل -->
 <div id="orderModal" class="order-modal">
     <div class="modal-content">
         <h3>📋 تفاصيل الطلب</h3>
         <form id="purchaseForm">
             <input type="text" id="fullName" placeholder="الاسم الكامل" required>
-            <input type="tel" id="phone" placeholder="رقم الجوال" required>
-            <select id="stateSelect" onchange="updateMunicipalities()" required>
+            <input type="tel" id="phone" placeholder="رقم الهاتف" required>
+            <select id="stateSelect" onchange="updateMunis()" required>
                 <option value="" disabled selected>🏢 إختر الولاية</option>
             </select>
             <select id="municipalitySelect" disabled required>
                 <option value="" disabled selected>🏘️ إختر البلدية</option>
             </select>
             <input type="text" id="address" placeholder="العنوان" required>
-            <button type="submit" class="btn-submit">✔️ تأكيد الطلب</button>
+            <button type="submit" class="btn-submit">تأكيد الطلب</button>
         </form>
     </div>
 </div>
 
-<div id="customThankyouModal" class="custom-thankyou-modal">
-    <div class="thankyou-card">
-        <span style="font-size:64px">🎉</span>
-        <h2>شكراً لك!</h2>
-        <div class="thankyou-message">تم استلام طلبك بنجاح!</div>
-        <button class="btn-close-thanks" onclick="closeThankYouModal()">إغلاق</button>
+<div id="thankYouModal" class="custom-thankyou-modal">
+    <div class="thankyou-card" style="text-align:center">
+        <h2>🎉 شكراً لك!</h2>
+        <p>تم استلام طلبك بنجاح.</p>
+        <button onclick="location.reload()" class="btn-submit">إغلاق</button>
     </div>
 </div>
 
 <script>
-    const SCRIPT_URL = "رابط_جوجل_سكريبت_الخاص_بك"; // استبدله برابط الـ exec الخاص بك
+    const SCRIPT_URL = "ضع_هنا_رابط_جوجل_سكريبت_الخاص_بك";
 
-    // السعر الديناميكي
-    const countSelect = document.getElementById('productCount');
-    const dynamicPriceSpan = document.getElementById('dynamicPriceDisplay');
-    countSelect.addEventListener('change', () => {
-        const price = countSelect.options[countSelect.selectedIndex].getAttribute('data-price');
-        dynamicPriceSpan.innerText = price + " DA";
-    });
+    // بيانات الولايات والبلديات الكاملة (مثال لولاياتك)
+    const dataDZ = {
+        "16": { name: "الجزائر", munis: ["سيدي محمد", "بئر مراد رايس", "الحراش", "باب الزوار", "القبة"] },
+        "31": { name: "وهران", munis: ["وهران", "بئر الجير", "السانية", "قديل"] },
+        "17": { name: "البليدة", munis: ["البليدة", "بوفاريك", "العفرون", "موزاية"] }
+        // يمكنك إضافة بقية الـ 58 ولاية هنا بنفس النمط
+    };
 
-    // الولايات (مثال لـ 58 ولاية)
-    const states = [{id:"16", ar:"الجزائر"}, {id:"31", ar:"وهران"}, {id:"17", ar:"البليدة"}];
-    const stateSelect = document.getElementById("stateSelect");
-    states.forEach(s => {
+    const sSelect = document.getElementById("stateSelect");
+    for (let id in dataDZ) {
         let opt = document.createElement("option");
-        opt.value = s.id; opt.textContent = s.id + " - " + s.ar;
-        stateSelect.appendChild(opt);
-    });
-
-    function updateMunicipalities() {
-        const mSelect = document.getElementById("municipalitySelect");
-        mSelect.disabled = false;
-        mSelect.innerHTML = '<option value="بلدية افتراضية">بلدية افتراضية</option>';
+        opt.value = id; opt.textContent = id + " - " + dataDZ[id].name;
+        sSelect.appendChild(opt);
     }
 
-    function openOrderModal() { document.getElementById("orderModal").style.display = "flex"; }
-    function closeOrderModal() { document.getElementById("orderModal").style.display = "none"; }
-    function showCustomThankyou() { document.getElementById("customThankyouModal").style.display = "flex"; }
-    function closeThankYouModal() { document.getElementById("customThankyouModal").style.display = "none"; }
+    function updateMunis() {
+        const mSelect = document.getElementById("municipalitySelect");
+        const id = sSelect.value;
+        mSelect.innerHTML = '<option value="" disabled selected>🏘️ إختر البلدية</option>';
+        if (dataDZ[id]) {
+            mSelect.disabled = false;
+            dataDZ[id].munis.forEach(m => {
+                let opt = document.createElement("option");
+                opt.value = m; opt.textContent = m;
+                mSelect.appendChild(opt);
+            });
+        }
+    }
 
-    // إرسال البيانات المتوافق مع GitHub
+    function changeImg(url, el) {
+        document.getElementById('currentMainImg').src = url;
+        document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+    }
+
     document.getElementById('purchaseForm').onsubmit = function(e) {
         e.preventDefault();
-        const submitBtn = e.target.querySelector('.btn-submit');
-        submitBtn.innerText = "جاري الإرسال... ⏳";
-        submitBtn.disabled = true;
+        const btn = e.target.querySelector('.btn-submit');
+        btn.innerText = "جاري الإرسال... ⏳";
+        btn.disabled = true;
 
-        const data = {
+        const order = {
             fullName: document.getElementById('fullName').value,
             phone: document.getElementById('phone').value,
-            wilaya: stateSelect.options[stateSelect.selectedIndex].text,
-            totalPrice: dynamicPriceSpan.innerText
+            wilaya: sSelect.options[sSelect.selectedIndex].text,
+            baladia: document.getElementById('municipalitySelect').value,
+            total: document.getElementById('dynamicPriceDisplay').innerText
         };
 
-        fetch(SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify(data)
-        }).then(() => {
-            closeOrderModal();
-            showCustomThankyou();
-            submitBtn.disabled = false;
-            submitBtn.innerText = "✔️ تأكيد الطلب";
+        fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(order) })
+        .then(() => {
+            document.getElementById('orderModal').style.display = 'none';
+            document.getElementById('thankYouModal').style.display = 'flex';
         });
     };
 </script>

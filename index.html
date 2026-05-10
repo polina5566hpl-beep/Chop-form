@@ -654,25 +654,52 @@
         };
         
         // إرسال البيانات إلى Google Sheets
-        google.script.run
-            .withSuccessHandler(function(response) {
-                console.log("نجاح:", response);
-                if(response.success) {
-                    closeOrderModal();
-                    showCustomThankyou();
-                } else {
-                    showError("❌ " + response.message);
-                    enableSubmitButton();
-                }
-            })
-            .withFailureHandler(function(error) {
-                console.error("خطأ:", error);
-                showError("❌ حدث خطأ في الاتصال: " + error.message);
-                enableSubmitButton();
-            })
-            .saveOrder(orderData);
-    };
+    // استبدل الرابط أدناه برابط الـ Web App الذي ستحصل عليه من جوجل شيت
+const SCRIPT_URL = "رابط_السكربت_الخاص_بك_هنا"; 
+
+document.getElementById('purchaseForm').onsubmit = (e) => {
+    e.preventDefault();
     
+    // جمع البيانات
+    const formData = {
+        productTitle: "⌚ ساعة رياضية ذكية - إصدار فاخر",
+        quantity: countSelect.value,
+        totalPrice: dynamicPriceSpan.innerText,
+        fullName: document.getElementById('fullName').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        wilaya: stateSelect.options[stateSelect.selectedIndex]?.text || "",
+        baladia: document.getElementById("municipalitySelect")?.value || "",
+        address: document.getElementById('address').value.trim()
+    };
+
+    // التحقق البسيط
+    if(!formData.fullName || !formData.phone) {
+        showError("⚠️ يرجى ملء البيانات الأساسية");
+        return;
+    }
+
+    disableSubmitButton();
+
+    // إرسال البيانات باستخدام fetch (مناسب لـ GitHub)
+    fetch(https://script.google.com/macros/s/AKfycbz4Hny65n-0FZ8cEBSDWh6C3xnsH2eJ_mtBauQ0jCuDoTK6iRJDcmGHe72V-iYagZs1iA/exec, {
+        method: 'POST',
+        mode: 'no-cors', // مهم جداً لتجنب مشاكل الـ CORS
+        cache: 'no-cache',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+    })
+    .then(response => {
+        // بما أننا نستخدم no-cors لن نستطيع قراءة الرد بدقة، لكن سنعتبره نجاحاً
+        closeOrderModal();
+        showCustomThankyou();
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        showError("❌ حدث خطأ أثناء الإرسال، حاول ثانية");
+        enableSubmitButton();
+    });
+};
+
     // ربط الدوال العامة
     window.changeImage = changeImage;
     window.openLightbox = openLightbox;
@@ -683,4 +710,4 @@
     window.closeThankYouModal = closeThankYouModal;
 </script>
 </body>
-        </html>
+    </html>

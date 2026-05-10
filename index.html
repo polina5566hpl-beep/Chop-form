@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>متجر احترافي - سلة الأسعار</title>
+    <title>متجر احترافي - سلة الأسعار | تصميم شكر أنيق</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         * {
@@ -25,6 +25,7 @@
             overflow-x: hidden;
         }
 
+        /* حاوية المنتج */
         .product-card { 
             width: 100vw; 
             height: 100vh; 
@@ -33,6 +34,7 @@
             overflow: hidden; 
         }
 
+        /* الصورة الكبيرة - حجم أكبر */
         .main-image-container { 
             width: 100%; 
             height: 58vh;
@@ -42,13 +44,16 @@
             justify-content: center; 
             align-items: center;
             overflow: hidden;
+            transition: all 0.2s;
         }
         .main-image-container img { 
             width: 100%; 
             height: 100%; 
             object-fit: cover; 
+            transition: transform 0.2s;
         }
 
+        /* الصور المصغرة */
         .thumbnail-list { 
             display: flex; 
             justify-content: center; 
@@ -69,6 +74,7 @@
         .thumb-item.active { border-color: var(--accent-color); transform: scale(0.96);}
         .thumb-item img { width: 100%; height: 100%; object-fit: cover; }
 
+        /* رأس المنتج: الاسم بجانب السلة */
         .product-header {
             display: flex;
             justify-content: space-between;
@@ -84,8 +90,10 @@
             line-height: 1.3;
             color: #0f172a;
             flex: 2;
+            letter-spacing: -0.2px;
         }
         
+        /* سلة الأسعار الجانبية */
         .price-basket {
             background: var(--price-bg);
             border-radius: 44px;
@@ -126,7 +134,12 @@
             color: var(--accent-color);
             line-height: 1.2;
         }
+        .price-now-dynamic small {
+            font-size: 11px;
+            font-weight: 700;
+        }
 
+        /* خيارات الكمية */
         .options-section { 
             padding: 4px 20px 0 20px; 
             margin-bottom: 8px; 
@@ -140,12 +153,18 @@
             font-family: 'Cairo'; 
             font-size: 16px; 
             font-weight: 600;
-            background: #f9fafb;
+            background: #f9fafb url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat left 14px center / 18px;
             appearance: none;
             cursor: pointer;
             color: #1e293b;
         }
+        select#productCount:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            background-color: #ffffff;
+        }
 
+        /* زر الشراء */
         .btn-buy { 
             width: calc(100% - 40px); 
             margin: 8px auto 10px auto; 
@@ -161,8 +180,9 @@
             transition: 0.12s;
             box-shadow: 0 6px 12px rgba(37,99,235,0.2);
         }
-        .btn-buy:active { transform: scale(0.97); }
+        .btn-buy:active { transform: scale(0.97); background-color: #1d4ed8;}
 
+        /* شارات الثقة */
         .trust-badges {
             display: flex;
             justify-content: space-around;
@@ -180,6 +200,7 @@
             line-height: 1.4;
         }
 
+        /* Lightbox التكبير */
         .lightbox {
             display: none; position: fixed; z-index: 4000; top: 0; left: 0;
             width: 100%; height: 100%; background: rgba(0,0,0,0.96);
@@ -187,10 +208,11 @@
         }
         .lightbox-content-wrapper { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
         .lightbox img { max-width: 95%; max-height: 85%; object-fit: contain; border-radius: 16px; }
-        .close-lb { position: absolute; top: 20px; right: 25px; color: white; font-size: 44px; cursor: pointer; }
-        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.2); backdrop-filter: blur(5px); color: white; border: none; padding: 12px 16px; cursor: pointer; font-size: 28px; border-radius: 60px; }
+        .close-lb { position: absolute; top: 20px; right: 25px; color: white; font-size: 44px; cursor: pointer; z-index: 4001; font-weight: 300; }
+        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.2); backdrop-filter: blur(5px); color: white; border: none; padding: 12px 16px; cursor: pointer; font-size: 28px; z-index: 4002; border-radius: 60px; transition: 0.1s; }
         .prev-btn { right: 15px; } .next-btn { left: 15px; }
 
+        /* مودال الطلب */
         .order-modal {
             display: none; position: fixed; z-index: 3000; top: 0; left: 0;
             width: 100%; height: 100%; background: rgba(0,0,0,0.75);
@@ -206,6 +228,11 @@
             width: 100%; padding: 12px 20px; margin-bottom: 15px; border-radius: 18px; border: 1.5px solid #e2e8f0; font-family: 'Cairo'; box-sizing: border-box;
             font-size: 15px;
         }
+        .order-modal input:focus, .order-modal select:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(37,99,235,0.1);
+        }
         .btn-submit { 
             width: 100%; 
             background: #10b981; 
@@ -217,11 +244,24 @@
             font-size: 17px; 
             cursor: pointer; 
             margin-top: 8px; 
+            transition: 0.1s; 
         }
+        .btn-submit:active { transform: scale(0.98); }
+        
+        /* حالة الزر عند التعطيل (رمادي) */
+        .btn-submit.disabled, .btn-submit:disabled {
+            background-color: #9ca3af !important;
+            cursor: not-allowed;
+            opacity: 0.7;
+            transform: none;
+        }
+        
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .close-modal-icon { font-size: 32px; cursor: pointer; color: #64748b; }
+        .close-modal-icon { font-size: 32px; cursor: pointer; font-weight: 400; line-height: 1; color: #64748b; transition: 0.1s; }
+        .close-modal-icon:hover { color: #0f172a; }
         h3 { margin:0; font-weight: 800; font-size: 1.4rem; }
 
+        /* نافذة الشكر */
         .custom-thankyou-modal {
             display: none;
             position: fixed;
@@ -233,6 +273,7 @@
             background-color: rgba(0, 0, 0, 0.6);
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(3px);
         }
         .thankyou-card {
             background: #ffffff;
@@ -242,6 +283,8 @@
             padding: 32px 24px 40px;
             text-align: center;
             box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.35);
+            border: none;
+            transition: all 0.2s ease;
             direction: rtl;
             font-family: 'Cairo', sans-serif;
         }
@@ -278,7 +321,15 @@
             width: 80%;
             margin-top: 12px;
             font-family: 'Cairo';
+            transition: 0.1s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
+        .thankyou-card .btn-close-thanks:active {
+            transform: scale(0.97);
+            background-color: #1e40af;
+        }
+        
+        /* رسالة الخطأ */
         .error-message {
             background-color: #fee2e2;
             color: #dc2626;
@@ -289,29 +340,12 @@
             font-size: 13px;
             display: none;
         }
-        .loading-spinner {
-            display: none;
-            text-align: center;
-            margin: 10px 0;
-        }
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid var(--accent-color);
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body>
 
 <div class="product-card">
+    <!-- الصورة الكبيرة -->
     <div class="main-image-container" onclick="openLightbox()">
         <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1000" id="currentMainImg" alt="منتج مميز">
     </div>
@@ -323,6 +357,7 @@
         <div class="thumb-item" onclick="changeImage(3, 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=1000')"><img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=150" alt="thumb4"></div>
     </div>
 
+    <!-- رأس المنتج -->
     <div class="product-header">
         <h2 class="product-title">⌚ ساعة رياضية ذكية - إصدار فاخر</h2>
         <div class="price-basket" id="priceBasket">
@@ -334,12 +369,14 @@
         </div>
     </div>
 
+    <!-- شارات الثقة -->
     <div class="trust-badges">
         <div class="badge-item">🚚 شحن مجاني<br>لكامل التراب</div>
         <div class="badge-item">🤝 دفع عند الاستلام<br>آمن 100%</div>
         <div class="badge-item">⭐ ضمان الجودة<br>والإستبدال</div>
     </div>
 
+    <!-- خيارات الكمية -->
     <div class="options-section">
         <select id="productCount">
             <option value="" disabled>📦 اختر العبوة المناسبة لك</option>
@@ -352,6 +389,7 @@
     <button class="btn-buy" onclick="openOrderModal()">🛍️ أطلب الآن - الدفع عند الإستلام</button>
 </div>
 
+<!-- Lightbox -->
 <div id="myLightbox" class="lightbox">
     <span class="close-lb" onclick="closeLightbox()">&times;</span>
     <div class="lightbox-content-wrapper">
@@ -361,6 +399,7 @@
     </div>
 </div>
 
+<!-- مودال الطلب -->
 <div id="orderModal" class="order-modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -370,7 +409,7 @@
         <form id="purchaseForm">
             <input type="text" id="fullName" placeholder="الاسم الكامل (ثلاثي)" required>
             <input type="tel" id="phone" placeholder="رقم الجوال 📱 مثال: 0556789123" required>
-            <select id="stateSelect" required>
+            <select id="stateSelect" onchange="updateMunicipalities()" required>
                 <option value="" disabled selected>🏢 إختر الولاية - Wilaya</option>
             </select>
             <select id="municipalitySelect" disabled required>
@@ -378,16 +417,13 @@
             </select>
             <input type="text" id="address" placeholder="العنوان الكامل (الشارع، رقم البيت، الحي)" required>
             <div id="formError" class="error-message"></div>
-            <div class="loading-spinner" id="loadingSpinner">
-                <div class="spinner"></div>
-                <p style="margin-top: 8px;">جاري إرسال الطلب...</p>
-            </div>
             <button type="submit" class="btn-submit" id="submitOrderBtn">✔️ تأكيد الطلب وإرسال</button>
         </form>
         <p style="font-size: 12px; color: #5b6e8c; text-align: center; margin-top: 14px;">سيتواصل معكم فريقنا لتأكيد الطلب خلال 24 ساعة</p>
     </div>
 </div>
 
+<!-- نافذة شكر -->
 <div id="customThankyouModal" class="custom-thankyou-modal">
     <div class="thankyou-card">
         <span class="emoji-big">🎉✅</span>
@@ -400,21 +436,7 @@
 </div>
 
 <script>
-    // ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️
-    // ضع رابط تطبيق Google Apps Script الخاص بك هنا
-    const WEB_APP_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
-    // ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️
-    
-    // البيانات
-    const images = [
-        'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200',
-        'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1200',
-        'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1200',
-        'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=1200'
-    ];
-    let currentIndex = 0;
-    
-    // النظام مع السلة
+    // ------------------ نظام السلة الديناميكي ------------------
     const countSelect = document.getElementById('productCount');
     const dynamicPriceSpan = document.getElementById('dynamicPriceDisplay');
     
@@ -427,6 +449,11 @@
         const priceValue = selectedOption.getAttribute('data-price');
         if (priceValue) {
             dynamicPriceSpan.innerHTML = `${parseInt(priceValue).toLocaleString()} DA`;
+        } else {
+            const text = selectedOption.innerText;
+            const match = text.match(/(\d+)\s*DA/);
+            if(match) dynamicPriceSpan.innerHTML = `${match[1]} DA`;
+            else dynamicPriceSpan.innerHTML = `? DA`;
         }
     }
     
@@ -442,7 +469,15 @@
     countSelect.addEventListener('change', updatePriceFromSelection);
     setDefaultSelect();
     
-    // معرض الصور
+    // ------------------ معرض الصور ------------------
+    const images = [
+        'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200',
+        'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1200',
+        'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1200',
+        'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=1200'
+    ];
+    let currentIndex = 0;
+    
     function changeImage(index, url) {
         currentIndex = index;
         document.getElementById('currentMainImg').src = url;
@@ -466,7 +501,7 @@
     }
     function updateLightbox() { document.getElementById("lightboxImg").src = images[currentIndex]; }
     
-    // بيانات الولايات
+    // ------------------ بيانات الولايات والبلديات ------------------
     const states = [
         { id: "16", ar: "الجزائر", fr: "Alger" },
         { id: "23", ar: "عنابة", fr: "Annaba" },
@@ -507,8 +542,6 @@
         }
     };
     
-    stateSelect.addEventListener('change', updateMunicipalities);
-    
     function openOrderModal() {
         const selectedVal = countSelect.value;
         if(!selectedVal || selectedVal === "") {
@@ -524,7 +557,8 @@
     }
     
     function showCustomThankyou() {
-        document.getElementById("customThankyouModal").style.display = "flex";
+        const thankyouModal = document.getElementById("customThankyouModal");
+        thankyouModal.style.display = "flex";
     }
     
     function closeThankYouModal() {
@@ -533,21 +567,20 @@
     }
     
     let submitBtn = document.getElementById('submitOrderBtn');
-    let loadingSpinner = document.getElementById('loadingSpinner');
     
     function disableSubmitButton() {
         if (submitBtn) {
             submitBtn.disabled = true;
-            submitBtn.style.opacity = '0.6';
-            loadingSpinner.style.display = 'block';
+            submitBtn.classList.add('disabled');
+            submitBtn.textContent = '⏳ جاري الإرسال...';
         }
     }
     
     function enableSubmitButton() {
         if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.style.opacity = '1';
-            loadingSpinner.style.display = 'none';
+            submitBtn.classList.remove('disabled');
+            submitBtn.textContent = '✔️ تأكيد الطلب وإرسال';
         }
     }
     
@@ -566,10 +599,11 @@
         if (e.target.id === "customThankyouModal") closeThankYouModal();
     };
     
-    // إرسال الطلب
-    document.getElementById('purchaseForm').onsubmit = async (e) => {
+    // ------------------ معالجة إرسال الطلب (الاتصال الفعلي بـ Google Sheets) ------------------
+    document.getElementById('purchaseForm').onsubmit = (e) => {
         e.preventDefault();
         
+        // جمع البيانات من النموذج
         const productTitle = "⌚ ساعة رياضية ذكية - إصدار فاخر";
         const quantityElem = countSelect.options[countSelect.selectedIndex];
         const quantity = quantityElem ? quantityElem.value : "غير محدد";
@@ -581,8 +615,9 @@
         const baladia = document.getElementById("municipalitySelect")?.value || "غير محدد";
         const address = document.getElementById('address').value.trim();
         
+        // التحقق من صحة البيانات
         if(!fullName || fullName.length < 3){
-            showError("⚠️ يرجى إدخال الاسم الكامل بشكل صحيح");
+            showError("⚠️ يرجى إدخال الاسم الكامل بشكل صحيح (3 أحرف على الأقل)");
             return;
         }
         if(!phone || phone.length < 9){
@@ -602,8 +637,10 @@
             return;
         }
         
+        // تعطيل الزر
         disableSubmitButton();
         
+        // تجهيز بيانات الطلب
         const orderData = {
             productTitle: productTitle,
             quantity: quantity,
@@ -616,27 +653,27 @@
             notes: ""
         };
         
-        try {
-            const response = await fetch(https://script.google.com/macros/s/AKfycbz5dAP_lyO5fAhAByEJOHMrYf24WRbjO1nEyoSOsarkkdY3lqpvWt_RibiZehxDiSC6DQ/exec, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(orderData)
-            });
-            
-            console.log('تم إرسال الطلب بنجاح');
-            closeOrderModal();
-            showCustomThankyou();
-            
-        } catch(error) {
-            console.error('خطأ:', error);
-            showError("❌ حدث خطأ في الاتصال: " + error.message);
-            enableSubmitButton();
-        }
+        // إرسال البيانات إلى Google Sheets
+        google.script.run
+            .withSuccessHandler(function(response) {
+                console.log("نجاح:", response);
+                if(response.success) {
+                    closeOrderModal();
+                    showCustomThankyou();
+                } else {
+                    showError("❌ " + response.message);
+                    enableSubmitButton();
+                }
+            })
+            .withFailureHandler(function(error) {
+                console.error("خطأ:", error);
+                showError("❌ حدث خطأ في الاتصال: " + error.message);
+                enableSubmitButton();
+            })
+            .saveOrder(orderData);
     };
     
+    // ربط الدوال العامة
     window.changeImage = changeImage;
     window.openLightbox = openLightbox;
     window.closeLightbox = closeLightbox;
@@ -644,7 +681,6 @@
     window.openOrderModal = openOrderModal;
     window.closeOrderModal = closeOrderModal;
     window.closeThankYouModal = closeThankYouModal;
-    window.updateMunicipalities = updateMunicipalities;
 </script>
 </body>
-                                                                                                                                           </html>
+        </html>

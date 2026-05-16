@@ -632,7 +632,7 @@ document.getElementById('purchaseForm').onsubmit = async (e) => {
     // 👇 هذا هو رابط Google Apps Script (الوسيط)
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwHC31qwOx71DVDOg7mdRGDIUkepDRvpi2LY4iXqgZVZMoJKYaWrxi0RC0KJppsvSI5/exec';
     
-    const response = fetch(SCRIPT_URL, {
+     fetch(SCRIPT_URL, {
       method: 'POST',
       mode: 'no-cors',
       headers: {
@@ -649,8 +649,6 @@ document.getElementById('purchaseForm').onsubmit = async (e) => {
       })
     });
     
-    closeOrderModal();
-    showCustomThankyou();
     
     // مسح النموذج
     document.getElementById('purchaseForm').reset();

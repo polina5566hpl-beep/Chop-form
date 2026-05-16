@@ -621,6 +621,10 @@ document.getElementById('purchaseForm').onsubmit = async (e) => {
   
   const submitBtn = document.querySelector('.btn-submit');
   const originalText = submitBtn.innerText;
+    setTimeout(() => {
+  closeOrderModal();
+  showCustomThankyou();
+}, 500);
   submitBtn.innerText = '⏳ جاري الإرسال...';
   submitBtn.disabled = true;
   

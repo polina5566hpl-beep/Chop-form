@@ -37,7 +37,7 @@
         /* الصورة الكبيرة - حجم أكبر */
         .main-image-container { 
             width: 100%; 
-            height: 48vh;
+            height: 58vh;
             background-color: #f1f5f9; 
             cursor: zoom-in;
             display: flex; 
@@ -58,7 +58,7 @@
             display: flex; 
             justify-content: center; 
             gap: 10px; 
-            margin: 2px 0 6px 0; 
+            margin: 8px 0 6px 0; 
             padding: 0 10px; 
         }
         .thumb-item { 
@@ -79,7 +79,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 2px 20px 0px 20px;
+            padding: 8px 20px 0px 20px;
             gap: 12px;
             flex-wrap: wrap;
         }
@@ -186,7 +186,7 @@
         .trust-badges {
             display: flex;
             justify-content: space-around;
-            margin: 2px 20px 8px 20px;
+            margin: 6px 20px 10px 20px;
             padding: 12px 12px;
             background: #f9fafb;
             border-radius: 22px;
@@ -369,7 +369,12 @@
         </div>
     </div>
 
-    
+    <!-- شارات الثقة -->
+    <div class="trust-badges">
+        <div class="badge-item">🚚 شحن مجاني<br>لكامل التراب</div>
+        <div class="badge-item">🤝 دفع عند الاستلام<br>آمن 100%</div>
+        <div class="badge-item">⭐ ضمان الجودة<br>والإستبدال</div>
+    </div>
 
     <!-- خيارات الكمية -->
     <div class="options-section">
@@ -621,18 +626,14 @@ document.getElementById('purchaseForm').onsubmit = async (e) => {
   
   const submitBtn = document.querySelector('.btn-submit');
   const originalText = submitBtn.innerText;
-    setTimeout(() => {
-  closeOrderModal();
-  showCustomThankyou();
-}, 1200);
   submitBtn.innerText = '⏳ جاري الإرسال...';
   submitBtn.disabled = true;
   
   try {
     // 👇 هذا هو رابط Google Apps Script (الوسيط)
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwHC31qwOx71DVDOg7mdRGDIUkepDRvpi2LY4iXqgZVZMoJKYaWrxi0RC0KJppsvSI5/exec';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx--5QNOkjFYdEqflxCS3jhAmGKkJhEvzyW85a5efM/dev';
     
-     fetch(SCRIPT_URL, {
+    const response = await fetch(SCRIPT_URL, {
       method: 'POST',
       mode: 'no-cors',
       headers: {
@@ -649,6 +650,8 @@ document.getElementById('purchaseForm').onsubmit = async (e) => {
       })
     });
     
+    closeOrderModal();
+    showCustomThankyou();
     
     // مسح النموذج
     document.getElementById('purchaseForm').reset();
@@ -672,4 +675,4 @@ document.getElementById('purchaseForm').onsubmit = async (e) => {
     window.closeThankYouModal = closeThankYouModal;
 </script>
 </body>
-                </html>
+            </html>

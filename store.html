@@ -6,7 +6,6 @@
     <title>متجر احترافي - نابيرون طاولات</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
-        /* نفس الـ CSS الموجود في الكود الأصلي - احتفظ به كما هو */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root { --accent-color: #2563eb; --text-dark: #1e293b; --white: #ffffff; }
         body { font-family: 'Cairo', sans-serif; background: #f9fafc; color: var(--text-dark); margin: 0; padding: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
@@ -307,16 +306,23 @@
         function enableSubmitButton() { const btn = document.getElementById('submitOrderBtn'); btn.disabled = false; btn.textContent = '✔️ تأكيد الطلب وإرسال'; }
         function showFormError(msg) { const errDiv = document.getElementById("formError"); errDiv.textContent = msg; errDiv.style.display = "block"; setTimeout(() => errDiv.style.display = "none", 5000); }
 
+        // ========================================
+        // كود الإرسال المعدل ليتوافق مع GS
+        // ========================================
         const purchaseForm = document.getElementById('purchaseForm');
-        purchaseForm.onsubmit = async (e) => {
+        
+        purchaseForm.onsubmit = (e) => {
             e.preventDefault();
+            
             const fullName = document.getElementById('fullName').value.trim();
             const phone = document.getElementById('phone').value.trim();
             const address = document.getElementById('address').value.trim();
             const wilayaText = stateSelect.options[stateSelect.selectedIndex]?.text || "";
             const municipality = document.getElementById("municipalitySelect").value;
+            
             if (!fullName || !phone) return showFormError("يرجى إدخال الاسم ورقم الهاتف");
             if (!stateSelect.value || !municipality) return showFormError("اختر الولاية والبلدية");
+            
             const opt = countSelect.options[countSelect.selectedIndex];
             const quantityValue = opt?.value || "0";
             const quantityText = opt?.textContent || "";
@@ -326,53 +332,48 @@
             
             disableSubmitButton();
             
-            // ⚠️ IMPORTANT: Replace this URL with your deployed Google Apps Script URL
-            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYk_q1ovTz_n4nB3hG3zFMMD0UC7BjBPrvvGKJR1jYVg1S5xJ0DaDjn4c-ZiVFxmp5/exec';
+            // 🔴 ضع رابط الـ Web App الخاص بك هنا
+            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxK7Vf8ysATZHlWxsxB0yvDJNsaYB9Thhpou4-eth84crb5WQyY3F0qQEzJ8Wa3fOQk/exec';
             
-            try {
-                // استخدام JSONP بدلاً من fetch لتفادي مشاكل CORS
-                const callbackName = 'jsonp_callback_' + Date.now();
-                window[callbackName] = function(response) {
-                    delete window[callbackName];
-                    document.body.removeChild(script);
-                    closeOrderModal();
-                    document.getElementById("customThankyouModal").style.display = "flex";
-                    purchaseForm.reset();
-                    document.getElementById('municipalitySelect').innerHTML = '<option value="" disabled selected>🏡 إختر البلدية</option>';
-                    document.getElementById('municipalitySelect').disabled = true;
-                    stateSelect.selectedIndex = 0;
-                    enableSubmitButton();
-                };
-                
-                const script = document.createElement('script');
-                const params = new URLSearchParams({
-                    callback: callbackName,
-                    fullName, phone, wilaya: wilayaText, municipality, address,
-                    quantity: quantityValue, quantityText, size: selectedSizeText,
-                    totalPrice, color: colorAr, shipping: SHIPPING_COST
-                });
-                script.src = `${SCRIPT_URL}?${params.toString()}`;
-                document.body.appendChild(script);
-                
-                // مهلة 10 ثواني
-                setTimeout(() => {
-                    if (window[callbackName]) {
-                        delete window[callbackName];
-                        document.body.removeChild(script);
-                        enableSubmitButton();
-                        showFormError('انتهت المهلة، حاول مرة أخرى');
-                    }
-                }, 10000);
-                
-            } catch (err) { 
-                showFormError('فشل الإرسال، حاول مرة أخرى'); 
-                enableSubmitButton();
-            }
+            // إرسال البيانات بنفس أسماء الحقول التي ينتظرها الـ GS
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    fullName: fullName,           // الاسم الكامل
+                    phone: phone,                 // رقم الهاتف
+                    wilaya: wilayaText,           // الولاية
+                    municipality: municipality,   // البلدية
+                    address: address,             // العنوان
+                    quantity: quantityValue,      // العدد (كمية)
+                    Diameter: selectedSizeText,   // القطر
+                    Color: colorAr,               // اللون
+                    totalPrice: totalPrice,       // السعر الإجمالي
+                    PrixDelivery: '600 DA',       // رسوم التوصيل
+                    Dimensions: selectedSizeText, // الأبعاد (نفس القطر)
+                    productName: 'nappe 29cm'     // اسم المنتج
+                })
+            });
+            
+            // إظهار رسالة الشكر مباشرة
+            closeOrderModal();
+            document.getElementById("customThankyouModal").style.display = "flex";
+            
+            // إعادة تعيين النموذج
+            purchaseForm.reset();
+            document.getElementById('municipalitySelect').innerHTML = '<option value="" disabled selected>🏡 إختر البلدية</option>';
+            document.getElementById('municipalitySelect').disabled = true;
+            stateSelect.selectedIndex = 0;
+            enableSubmitButton();
         };
 
-        window.onclick = (e) => { if (e.target.classList && e.target.classList.contains('order-modal')) closeOrderModal(); if (e.target.classList && e.target.classList.contains('custom-thankyou-modal')) closeThankYouModal(); };
+        window.onclick = (e) => { 
+            if (e.target.classList && e.target.classList.contains('order-modal')) closeOrderModal(); 
+            if (e.target.classList && e.target.classList.contains('custom-thankyou-modal')) closeThankYouModal(); 
+        };
         
         setTimeout(() => { triggerBasketGlow(); }, 120);
     </script>
 </body>
-  </html>
+                                                                                                                                                  </html>

@@ -307,7 +307,7 @@
         function showFormError(msg) { const errDiv = document.getElementById("formError"); errDiv.textContent = msg; errDiv.style.display = "block"; setTimeout(() => errDiv.style.display = "none", 5000); }
 
         // ========================================
-        // كود الإرسال المعدل ليتوافق مع GS
+        // كود الإرسال مع PrixProduit
         // ========================================
         const purchaseForm = document.getElementById('purchaseForm');
         
@@ -329,38 +329,37 @@
             const selectedSizeText = sizeSelect.options[sizeSelect.selectedIndex]?.textContent || "";
             const totalPrice = dynamicPriceSpan.innerText;
             const colorAr = selectedColor === 'silver' ? 'فضي' : (selectedColor === 'gold' ? 'ذهبي' : 'بنفسجي');
+            const produitsPrice = getCurrentProductsPrice().toString(); // PrixProduit
             
             disableSubmitButton();
             
-            // 🔴 ضع رابط الـ Web App الخاص بك هنا
-            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxK7Vf8ysATZHlWxsxB0yvDJNsaYB9Thhpou4-eth84crb5WQyY3F0qQEzJ8Wa3fOQk/exec';
+            // ضع رابط الـ Web App الخاص بك هنا
+            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzO-T1srV6qTv8h70UzamWTf-s7fj0X8njGM2jsUWZ3CmVjvCCULiJ68EFaDxxCVtnz/exec';
             
-            // إرسال البيانات بنفس أسماء الحقول التي ينتظرها الـ GS
             fetch(SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    fullName: fullName,           // الاسم الكامل
-                    phone: phone,                 // رقم الهاتف
-                    wilaya: wilayaText,           // الولاية
-                    municipality: municipality,   // البلدية
-                    address: address,             // العنوان
-                    quantity: quantityValue,      // العدد (كمية)
-                    Diameter: selectedSizeText,   // القطر
-                    Color: colorAr,               // اللون
-                    totalPrice: totalPrice,       // السعر الإجمالي
-                    PrixDelivery: '600 DA',       // رسوم التوصيل
-                    Dimensions: selectedSizeText, // الأبعاد (نفس القطر)
-                    productName: 'nappe 29cm'     // اسم المنتج
+                    fullName: fullName,
+                    phone: phone,
+                    wilaya: wilayaText,
+                    municipality: municipality,
+                    address: address,
+                    quantity: quantityValue,
+                    Diameter: selectedSizeText,
+                    Color: colorAr,
+                    totalPrice: totalPrice,
+                    PrixDelivery: '600 DA',
+                    PrixProduit: produitsPrice,      // الحقل الجديد
+                    Dimensions: selectedSizeText,
+                    productName: 'nappe 29cm'
                 })
             });
             
-            // إظهار رسالة الشكر مباشرة
             closeOrderModal();
             document.getElementById("customThankyouModal").style.display = "flex";
             
-            // إعادة تعيين النموذج
             purchaseForm.reset();
             document.getElementById('municipalitySelect').innerHTML = '<option value="" disabled selected>🏡 إختر البلدية</option>';
             document.getElementById('municipalitySelect').disabled = true;
@@ -376,4 +375,4 @@
         setTimeout(() => { triggerBasketGlow(); }, 120);
     </script>
 </body>
-                                                                                                                                                  </html>
+    </html>

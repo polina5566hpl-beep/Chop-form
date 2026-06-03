@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Chaiti — سلة المشتريات</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+/* ─── DESIGN TOKENS — نفس الألوان من المتجر ─── */
+:root {
+  --bg-0:    #fdf8f2;
+  --bg-1:    #faf3e8;
+  --bg-2:    #f5ead8;
+  --caramel:  #c97d3a;
+  --honey:    #e9a84c;
+  --sand:     #d4a96a;
+  --terracotta: #c25e3a;
+  --text-hi:  #2d1f0e;
+  --text-md:  rgba(45,31,14,.62);
+  --text-lo:  rgba(45,31,14,.38);
+  --border:   rgba(180,130,80,.15);
+  --border-hi:rgba(180,130,80,.3);
+  --glass:    rgba(255,255,255,.55);
+  --grad-warm: linear-gradient(135deg, #e9a84c 0%, #d4a96a 100%);
+  --grad-action: linear-gradient(135deg, #c25e3a 0%, #c97d3a 100%);
+  --shadow-card: 0 4px 20px rgba(140,80,30,.08);
+  --r-xl: 28px;
+  --r-lg: 20px;
+  --r-md: 14px;
+  --r-sm: 10px;
+  --ease: cubic-bezier(.16,1,.3,1);
+  --dur-fast: 180ms;
+  --dur-med:  320ms;
+  --dur-slow: 500ms;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family:'Tajawal', sans-serif;
+  background: var(--bg-0);
+  color: var(--text-hi);
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+
+/* ─── رأس الصفحة ─── */
+.cart-header {
+  max-width: 800px;
+  margin: 0 auto 1.5rem;
+  text-align: center;
+}
+.cart-header h1 {
+  font-family: 'Cairo', sans-serif;
+  font-size: clamp(1.8rem, 5vw, 2.4rem);
+  font-weight: 900;
+  background: linear-gradient(135deg, #e9a84c 0%, #c97d3a 45%, #c25e3a 80%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+}
+.cart-header p {
+  color: var(--text-lo);
+  font-size: 0.85rem;
+}
+
+/* ─── حاوية السلة ─── */
+.cart-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: var(--r-xl);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+/* ─── عناصر السلة ─── */
+.cart-items {
+  padding: 1.5rem;
+  min-height: 300px;
+}
+.cart-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-lo);
+}
+.cart-empty i {
+  font-size: 3rem;
+  color: var(--sand);
+  margin-bottom: 1rem;
+  display: block;
+}
+.cart-empty .shop-link {
+  display: inline-block;
+  margin-top: 1.5rem;
+  background: var(--grad-action);
+  color: #fff;
+  text-decoration: none;
+  padding: 0.7rem 2rem;
+  border-radius: var(--r-md);
+  font-weight: 600;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.cart-empty .shop-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(194,94,58,.3);
+}
+
+/* ─── عنصر منتج في السلة ─── */
+.cart-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.cart-item:last-child {
+  border-bottom: none;
+}
+.item-img {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  background: var(--bg-1);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.item-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.item-info {
+  flex: 1;
+  min-width: 0;
+}
+.item-name {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-hi);
+  margin-bottom: 0.3rem;
+}
+.item-price {
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--terracotta);
+  margin-bottom: 0.5rem;
+}
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.qty-control {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--bg-1);
+  border-radius: var(--r-sm);
+  padding: 0.2rem 0.4rem;
+  border: 1px solid var(--border);
+}
+.qty-btn {
+  background: transparent;
+  border: none;
+  width: 28px;
+  height: 28px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: var(--text-md);
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+.qty-btn:hover {
+  background: rgba(201,125,58,.15);
+  color: var(--caramel);
+}
+.qty-num {
+  font-weight: 700;
+  min-width: 28px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+.remove-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-lo);
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--r-sm);
+  transition: all 0.2s;
+}
+.remove-btn:hover {
+  color: var(--terracotta);
+  background: rgba(194,94,58,.08);
+}
+.item-total {
+  text-align: left;
+  min-width: 80px;
+}
+.item-total .label {
+  font-size: 0.7rem;
+  color: var(--text-lo);
+  display: block;
+}
+.item-total .amount {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  background: var(--grad-warm);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── ملخص السلة ─── */
+.cart-summary {
+  background: var(--bg-1);
+  padding: 1.2rem 1.5rem;
+  border-top: 1px solid var(--border);
+}
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+  color: var(--text-md);
+}
+.summary-row.total {
+  border-top: 1px solid var(--border);
+  margin-top: 0.5rem;
+  padding-top: 0.8rem;
+  font-size: 1rem;
+}
+.summary-row.total span:first-child {
+  font-weight: 700;
+  color: var(--text-hi);
+}
+.summary-row.total .total-amount {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  background: var(--grad-warm);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.checkout-btn {
+  width: 100%;
+  background: var(--grad-action);
+  color: #fff;
+  border: none;
+  font-family: 'Cairo', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.9rem;
+  border-radius: var(--r-md);
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.checkout-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(194,94,58,.35);
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(28px);
+  background: #fff;
+  color: var(--text-hi);
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.7rem 1.5rem;
+  z-index: 500;
+  opacity: 0;
+  pointer-events: none;
+  border: 1px solid var(--border-hi);
+  border-radius: 50px;
+  box-shadow: 0 8px 28px rgba(180,100,40,.15);
+  transition: all var(--dur-med) var(--ease);
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (max-width: 550px) {
+  .cart-container { border-radius: var(--r-lg); }
+  .cart-items { padding: 1rem; }
+  .cart-item { flex-wrap: wrap; }
+  .item-total { width: 100%; text-align: right; margin-top: 0.5rem; padding-right: 92px; }
+}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast">✓ تم التحديث</div>
+
+<div class="cart-header">
+  <h1>🛒 سلة المشتريات</h1>
+  <p>بيوت قطط فاخرة — جلد صناعي ممتاز ورتان طبيعي</p>
+</div>
+
+<div class="cart-container" id="cartContainer">
+  <!-- المحتوى ديناميكي -->
+  <div id="cartContent"></div>
+</div>
+
+<script>
+// ─── نفس المنتجات من المتجر ───
+const PRODUCTS = [
+  {id:1, name:'بيت كلاسيك دافئ الفاخر', price:3800,
+   imgs:['https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/ed35b93c1cafca60e729205e141835006318062b/Cats/Cvd.png',
+         'https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/ed35b93c1cafca60e729205e141835006318062b/Cats/Gasba.png']},
+  {id:2, name:'بيت البامبو الملكي المصنوع يدوياً', price:4500,
+   imgs:['https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/ed35b93c1cafca60e729205e141835006318062b/Cats/Jawhara.png',
+         'https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/ed35b93c1cafca60e729205e141835006318062b/Cats/Khatmti.png']},
+  {id:3, name:'كهف الراحة والهدوء الإمبراطوري', price:3200,
+   imgs:['https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/ed35b93c1cafca60e729205e141835006318062b/Cats/Koba.png',
+         'https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/ed35b93c1cafca60e729205e141835006318062b/Cats/Pang.png']}
+];
+
+const DELIVERY_FEE = 600;
+
+// ─── تحميل السلة من localStorage ───
+let cart = [];
+
+function loadCart() {
+  const saved = localStorage.getItem('chaiti_cart');
+  if (saved) {
+    try {
+      const parsedCart = JSON.parse(saved);
+      // تحقق من صحة البيانات وأيضاً تأكد أنها مصفوفة وليست فارغة بشكل غير متوقع (نقبل حتى الفارغة)
+      if (Array.isArray(parsedCart)) {
+        cart = parsedCart;
+      } else {
+        cart = [];
+      }
+    } catch(e) { 
+      cart = []; 
+    }
+  } else {
+    // ⚡ الإصلاح الجوهري: لم نعد نضيف منتجات وهمية تلقائياً.
+    // السلة تبدأ فارغة تماماً بدون أي منتج افتراضي.
+    cart = [];
+  }
+  
+  // تطهير إضافي: التأكد من أن كل عنصر يحتوي على الخصائص الأساسية وإزالة أي عناصر تالفة
+  cart = cart.filter(item => item && typeof item === 'object' && item.id && item.name && typeof item.price === 'number' && typeof item.qty === 'number' && item.qty > 0);
+  
+  // في حال وجود أي عنصر بدون imgs نحاول ترميمه من PRODUCTS
+  cart = cart.map(item => {
+    if (!item.imgs || !item.imgs.length) {
+      const original = PRODUCTS.find(p => p.id === item.id);
+      if (original) {
+        item.imgs = original.imgs;
+      } else {
+        // إذا لم نجد المنتج في القائمة، نضع صورة افتراضية عامة ونبقي الاسم
+        item.imgs = ['https://via.placeholder.com/80?text=Cat'];
+      }
+    }
+    return item;
+  });
+  
+  // حفظ بعد التطهير لضمان صحة البيانات
+  saveCart();
+}
+
+function saveCart() {
+  localStorage.setItem('chaiti_cart', JSON.stringify(cart));
+}
+
+// ─── دوال مساعدة ───
+function getSubtotal() {
+  return cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+}
+
+function getTotal() {
+  return cart.length ? getSubtotal() + DELIVERY_FEE : 0;
+}
+
+// دالة لعرض رسالة منبثقة
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// تحديث العرض الرئيسي
+function updateCartDisplay() {
+  const container = document.getElementById('cartContent');
+  if (!container) return;
+
+  // حالة السلة فارغة (بعد الإصلاح تصبح فارغة فعلاً بدون منتجات تلقائية)
+  if (!cart.length) {
+    container.innerHTML = `
+      <div class="cart-items">
+        <div class="cart-empty">
+          <i class="fas fa-shopping-bag"></i>
+          <p>سلة المشتريات فارغة حالياً</p>
+          <a href="#" class="shop-link" id="emptyShopLink">🐾 اكتشف المنتجات</a>
+        </div>
+      </div>
+    `;
+    const shopLink = document.getElementById('emptyShopLink');
+    if (shopLink) shopLink.addEventListener('click', (e) => { 
+      e.preventDefault(); 
+      window.location.href = 'index.html'; 
+    });
+    return;
+  }
+
+  // بناء قائمة المنتجات في السلة
+  let itemsHtml = '';
+  cart.forEach((item, idx) => {
+    // أخذ أول صورة من imgs إن وجدت
+    const imgSrc = item.imgs && item.imgs[0] ? item.imgs[0] : 'https://via.placeholder.com/80?text=Cat';
+    const itemTotal = item.price * item.qty;
+    itemsHtml += `
+      <div class="cart-item" data-id="${item.id}">
+        <div class="item-img">
+          <img src="${imgSrc}" alt="${escapeHtml(item.name)}" loading="lazy">
+        </div>
+        <div class="item-info">
+          <div class="item-name">${escapeHtml(item.name)}</div>
+          <div class="item-price">${item.price.toLocaleString()} دج</div>
+          <div class="item-actions">
+            <div class="qty-control">
+              <button class="qty-btn" data-action="decr" data-id="${item.id}">−</button>
+              <span class="qty-num">${item.qty}</span>
+              <button class="qty-btn" data-action="incr" data-id="${item.id}">+</button>
+            </div>
+            <button class="remove-btn" data-action="remove" data-id="${item.id}">
+              <i class="fas fa-trash-alt"></i> إزالة
+            </button>
+          </div>
+        </div>
+        <div class="item-total">
+          <span class="label">المجموع</span>
+          <span class="amount">${itemTotal.toLocaleString()} دج</span>
+        </div>
+      </div>
+    `;
+  });
+
+  const subtotal = getSubtotal();
+  const total = getTotal();
+
+  container.innerHTML = `
+    <div class="cart-items">
+      ${itemsHtml}
+    </div>
+    <div class="cart-summary">
+      <div class="summary-row">
+        <span>المجموع الفرعي</span>
+        <span>${subtotal.toLocaleString()} دج</span>
+      </div>
+      <div class="summary-row">
+        <span>رسوم التوصيل</span>
+        <span>${cart.length ? DELIVERY_FEE.toLocaleString() : '0'} دج</span>
+      </div>
+      <div class="summary-row total">
+        <span>المبلغ الإجمالي</span>
+        <span class="total-amount">${total.toLocaleString()} دج</span>
+      </div>
+      <button class="checkout-btn" id="checkoutBtn">
+        <i class="fas fa-credit-card"></i> إتمام الطلب
+      </button>
+    </div>
+  `;
+
+  // ربط أحداث التحكم بالكمية والحذف
+  document.querySelectorAll('.qty-btn').forEach(btn => {
+    // إزالة أي مستمع قديم وتجنب الازدواجية عبر استخدام onclick جديد؟ الأفضل addEventListener بشرط عدم تكرار
+    // نستخدم استنساخ بسيط للحدث ولكن لا بأس بإضافة مستمع جديد، نمنع التكرار عبر إزالة القديم بطريقة غير مباشرة؟ لكن العناصر جديدة فالمستمعات جديدة.
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = parseInt(btn.dataset.id);
+      const action = btn.dataset.action;
+      if (action === 'incr') changeQty(id, 1);
+      else if (action === 'decr') changeQty(id, -1);
+    });
+  });
+
+  document.querySelectorAll('.remove-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = parseInt(btn.dataset.id);
+      removeItem(id);
+    });
+  });
+
+  // ربط زر إتمام الطلب مع ضمان فتح Order.html وفحص السلة أولاً
+  const checkoutBtn = document.getElementById('checkoutBtn');
+  if (checkoutBtn) {
+    // نستخدم استنساخ لتفادي تكرار المستمعات (لكن العنصر جديد أصلاً فلا حاجة)
+    // لكن للتأكد من عدم وجود مستمعات سابقة (لأن updateCartDisplay تعيد إنشاء الـ HTML)
+    const newCheckoutBtn = checkoutBtn.cloneNode(true);
+    checkoutBtn.parentNode.replaceChild(newCheckoutBtn, checkoutBtn);
+    
+    newCheckoutBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (!cart.length) {
+        showToast('⚠️ السلة فارغة، أضف منتجات أولاً');
+        return;
+      }
+      saveCart();
+      window.location.href = 'Order.html';
+    });
+  }
+}
+
+// تغيير كمية منتج
+function changeQty(id, delta) {
+  const itemIndex = cart.findIndex(i => i.id === id);
+  if (itemIndex === -1) return;
+  const item = cart[itemIndex];
+  const newQty = item.qty + delta;
+  if (newQty <= 0) {
+    cart.splice(itemIndex, 1);
+    saveCart();
+    updateCartDisplay();
+    showToast(`✓ تم إزالة المنتج من السلة`);
+  } else {
+    item.qty = newQty;
+    saveCart();
+    updateCartDisplay();
+    showToast(`✓ تم تحديث الكمية إلى ${newQty}`);
+  }
+}
+
+// إزالة منتج بالكامل
+function removeItem(id) {
+  const initialLength = cart.length;
+  cart = cart.filter(i => i.id !== id);
+  if (cart.length !== initialLength) {
+    saveCart();
+    updateCartDisplay();
+    showToast(`✓ تم إزالة المنتج من السلة`);
+  } else {
+    showToast(`⚠️ المنتج غير موجود`);
+  }
+}
+
+// دالة لتطهير السلة بالكامل (اختيارية ولكنها للاستخدام المستقبلي)
+function clearCartIfNeeded() {
+  // نضمن أنه لا توجد أي بيانات قديمة خاطئة.
+  if (cart.some(item => item.qty <= 0)) {
+    cart = cart.filter(item => item.qty > 0);
+    saveCart();
+    updateCartDisplay();
+  }
+}
+
+// دالة مساعدة للـ escapeHtml
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/[&<>]/g, function(m) {
+    if (m === '&') return '&amp;';
+    if (m === '<') return '&lt;';
+    if (m === '>') return '&gt;';
+    return m;
+  });
+}
+
+// دالة إعادة تهيئة ومسح أي بيانات خاطئة من localStorage بالكامل إذا رغب المستخدم (ولكن ليس تلقائياً، بل يمكن استدعاؤها فقط إذا أردنا)
+// لكننا لن نمسح بيانات المستخدم الحقيقية، فقط نضمن بداية نظيفة بدون منتجات زائفة.
+
+// تهيئة الصفحة
+function init() {
+  // الخطوة الأولى: تحميل السلة من localStorage (لن تضع منتجات وهمية أبداً الآن)
+  loadCart();
+  
+  // تطهير إضافي: إذا كان هناك أي منتج بالخطأ ليس له id صحيح أو صفرية الكمية
+  cart = cart.filter(item => item && item.id && item.qty > 0 && typeof item.price === 'number' && item.price > 0);
+  
+  // إذا كان هناك مشكلة في الصور مثلاً نصححها
+  cart = cart.map(item => {
+    if (!item.imgs || !item.imgs.length) {
+      const originalProduct = PRODUCTS.find(p => p.id === item.id);
+      if (originalProduct && originalProduct.imgs) {
+        item.imgs = [...originalProduct.imgs];
+      } else {
+        item.imgs = ['https://via.placeholder.com/80?text=Cat'];
+      }
+    }
+    return item;
+  });
+  
+  // نعيد حفظ السلة بعد التنظيف للتأكد من المزامنة
+  saveCart();
+  
+  // تحديث العرض
+  updateCartDisplay();
+  
+  // إضافة مستمع لحدث storage للتحديث بين النوافذ إذا فتح أكثر من تاب
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'chaiti_cart') {
+      loadCart();
+      updateCartDisplay();
+    }
+  });
+}
+
+// بدء التطبيق
+init();
+</script>
+</body>
+</html>

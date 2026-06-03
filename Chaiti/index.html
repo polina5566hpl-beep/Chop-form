@@ -277,6 +277,13 @@ body {
   font-size: 1.05rem;
   border-radius: 14px;
 }
+
+/* بصمة انتقال ذكية: حماية من النقر المتكرر */
+.btn-loading {
+  pointer-events: none;
+  opacity: 0.7;
+  transform: scale(0.98);
+}
 </style>
 </head>
 <body>
@@ -317,8 +324,8 @@ body {
 راحة وأناقة لقطتك
     </p>
     
-    <!-- ⚡ الزر المعدل للانتقال السريع (حجم الزر لم يتغير كما هو مطلوب) -->
-    <button class="w-cta" onclick="window.location.replace('Boutique.html')">
+    <!-- ⚡ الزر المعدل للانتقال السريع مع دعم Smart History State Manager -->
+    <button class="w-cta" id="shopEntryBtn">
       <span>دلل قطتك الآن 🐾</span>
     </button>
     
@@ -328,9 +335,315 @@ body {
 </div>
 
 <script>
-// Simple toast notification function (محتفظ بها كما هي، ويمكن استعمالها إذا دعت الحاجة في المستقبل)
+// ============================================================
+//  SMART HISTORY STATE MANAGER (v1.0)
+//  مدير الحالة الذكي للملاحة وإدارة سجل التصفح وتجربة المستخدم
+//  الميزات: 
+//  - إدارة ذكية لاستبدال الحالات أو دفعها حسب السياق 
+//  - منع ازدواجية الإدخالات في history
+//  - حماية من التنقل الخاطئ عند العودة بالزر الخلفي
+//  - استعادة الحالة الترويجية وجلسة المستخدم
+//  - توافق مع SPA/MPA مع الاحتفاظ بالمرجعيات
+// ============================================================
+(function() {
+  'use strict';
+
+  // ----- تكوينات المدير -----
+  const CONFIG = {
+    // اسم الحالة الأساسية للشاشة الترحيبية (لتمييزها في السجل)
+    WELCOME_STATE_KEY: 'chaiti:welcome',
+    // هل نستبدل التاريخ الحالي بدلاً من إضافة إدخال جديد في أول تحميل؟ (لجعل الصفحة الرئيسية "جذرية")
+    replaceInitialEntry: true,
+    // هل نمنع الدخول المزدوج لنفس الحالة (يمنع تكرار نفس الصفحة في الـ history)
+    preventDuplicateState: true,
+    // مهلة حماية النقر المتكرر على الزر (ms)
+    navigationCooldown: 500,
+    // مسار المتجر (يمكن تغييره لاحقاً)
+    boutiquePath: 'Boutique.html',
+    // تمكين تصحيح الأخطاء في وحدة التحكم (لمطوري الموقع)
+    debugMode: true
+  };
+
+  // متغيرات داخلية
+  let isNavigating = false;          // منع النقر المتكرر
+  let currentStateId = null;        // تتبع معرف الحالة الحالي لمنع الازدواجية
+  let hasReplacedInitial = false;    // تم استبدال المدخل الأولي؟
+  let popStateListenerAttached = false;
+  let currentWelcomeActive = true;   // هل شاشة الترحيب نشطة الآن؟
+
+  // مرجع لعنصر الزر وحاوية التوست
+  const shopBtn = document.getElementById('shopEntryBtn');
+  const toastEl = document.getElementById('toast');
+
+  // دالة عرض الإشعارات الداخلية (تستعمل نفس واجهة Toast)
+  function showSmartToast(message, duration = 2800) {
+    if (!toastEl) return;
+    toastEl.textContent = message;
+    toastEl.classList.add('on');
+    setTimeout(() => {
+      toastEl.classList.remove('on');
+    }, duration);
+  }
+
+  // تسجيل (log) في وضع التصحيح
+  function debugLog(...args) {
+    if (CONFIG.debugMode) {
+      console.log('[SmartHistory]', ...args);
+    }
+  }
+
+  // الحصول على الحالة الحالية من window.history (إذا كانت موجودة)
+  function getCurrentHistoryState() {
+    return window.history.state || null;
+  }
+
+  // توليد معرف فريد للحالة (بسيط وفعال)
+  function generateStateId() {
+    return `${CONFIG.WELCOME_STATE_KEY}_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
+  }
+
+  // بناء كائن الحالة الذكية 
+  function createStateObject(customData = {}) {
+    return {
+      type: CONFIG.WELCOME_STATE_KEY,
+      timestamp: Date.now(),
+      id: generateStateId(),
+      welcomeActive: true,      // في هذه الصفحة دائماً true (ما لم نغادر)
+      from: 'welcome_screen',
+      ...customData
+    };
+  }
+
+  // فحص ما إذا كان التاريخ الحالي مكرراً (نفس نوع welcome ونفس النشاط)
+  function isDuplicateOfCurrent(newState) {
+    if (!CONFIG.preventDuplicateState) return false;
+    const current = getCurrentHistoryState();
+    if (!current) return false;
+    // اذا كان كلا الحالتين من نوع الترحيب ونفس welcomeActive
+    return (current.type === CONFIG.WELCOME_STATE_KEY && 
+            newState.type === CONFIG.WELCOME_STATE_KEY &&
+            current.welcomeActive === newState.welcomeActive);
+  }
+
+  // إدارة استبدال الحالة الحالية (لجعل نقطة الدخول نظيفة)
+  function replaceWelcomeState() {
+    if (hasReplacedInitial) return;
+    try {
+      const newState = createStateObject({ initialLoad: true, replaced: true });
+      if (window.history.replaceState) {
+        window.history.replaceState(newState, document.title, window.location.href);
+        currentStateId = newState.id;
+        hasReplacedInitial = true;
+        debugLog('تم استبدال الحالة الأولية بنجاح (replaceState)', newState);
+      } else {
+        debugLog('المتصفح لا يدعم replaceState، نستخدم pushState احتياطياً');
+        window.history.pushState(createStateObject({ initialLoad: true }), document.title, window.location.href);
+        hasReplacedInitial = true;
+      }
+    } catch (e) {
+      debugLog('خطأ أثناء استبدال الحالة:', e);
+    }
+  }
+
+  // تهيئة أولية للمدير: استبدال أو دفع الحالة الافتراضية حسب التكوين
+  function initHistoryManager() {
+    // إذا كان الاستبدال مفعلاً والمدخل الحالي ليس حالتنا المخصصة 
+    const currentState = getCurrentHistoryState();
+    const isAlreadyManaged = currentState && currentState.type === CONFIG.WELCOME_STATE_KEY;
+    
+    if (CONFIG.replaceInitialEntry && !isAlreadyManaged) {
+      replaceWelcomeState();
+    } else if (!isAlreadyManaged) {
+      // دفع حالة جديدة كمدخل آمن
+      try {
+        const freshState = createStateObject({ initialPush: true });
+        window.history.pushState(freshState, document.title, window.location.href);
+        currentStateId = freshState.id;
+        hasReplacedInitial = true;
+        debugLog('تم دفع حالة ترحيبية جديدة (pushState)');
+      } catch(e) { debugLog(e); }
+    } else {
+      // بالفعل هناك حالة مُدارة
+      currentStateId = currentState.id;
+      hasReplacedInitial = true;
+      debugLog('الحالة المدارة موجودة مسبقاً، نستخدمها');
+    }
+    
+    // ربط مستمع popState للتعامل مع أزرار التنقل (الرجوع/التقدم)
+    if (!popStateListenerAttached) {
+      window.addEventListener('popstate', onPopState);
+      popStateListenerAttached = true;
+      debugLog('تم ربط مستمع popState');
+    }
+  }
+
+  // المعالج الذكي لحدث الرجوع/التقدم من المستخدم
+  function onPopState(event) {
+    const state = event.state;
+    debugLog('حدث popState تم استدعاؤه', state);
+    
+    // في حال عدم وجود حالة أو حالة غير متوقعة، نسمح بالسلوك الافتراضي لكن مع حماية minimal
+    if (!state || state.type !== CONFIG.WELCOME_STATE_KEY) {
+      // إذا كانت الصفحة الحالية هي شاشة الترحيب ولا توجد حالة مناسبة 
+      // نستعيد حالة آمنة لمنع فقدان التحكم
+      if (document.getElementById('welcome')) {
+        debugLog('حالة غير معروفة، نستعيد الحالة الافتراضية للترحيب.');
+        try {
+          const safeState = createStateObject({ recovery: true });
+          window.history.replaceState(safeState, document.title, window.location.href);
+          currentStateId = safeState.id;
+        } catch(e) {}
+      }
+      return;
+    }
+    
+    // تحديث currentStateId
+    if (state.id) currentStateId = state.id;
+    currentWelcomeActive = state.welcomeActive === true;
+    
+    // في هذه الصفحة (شاشة الترحيب) welcomeActive تكون true دائماً.
+    // لا نحتاج إلى إجراء إعادة تحميل للصفحة لأننا ما زلنا في شاشة الترحيب.
+    // لكن قد يكون المستخدم عاد من المتجر باستخدام back، في هذه الحالة نظهر شاشة الترحيب طبيعيًا (موجودة بالفعل).
+    // نتحقق إذا كانت شاشة الترحيب مرئية، وإن لم تكن (سيناريو نادر) نعيد إظهارها عبر تحديث visibility؟
+    const welcomeDiv = document.getElementById('welcome');
+    if (welcomeDiv && welcomeDiv.style.display === 'none') {
+      // تأمين نادر: اذا تم إخفاؤها عن طريق الخطأ نعيد إظهارها
+      welcomeDiv.style.display = 'flex';
+      debugLog('تمت استعادة ظهور شاشة الترحيب بعد popState');
+    }
+    
+    // إلغاء أي حالة "تحميل" للزر إن وجدت
+    if (shopBtn) {
+      shopBtn.classList.remove('btn-loading');
+    }
+    isNavigating = false;
+    
+    // إشعار للمستخدم (اختياري) لإعلامه بالعودة.
+    showSmartToast('✨ عدت إلى شاشة chaiti', 1800);
+  }
+
+  // دالة الانتقال الذكي إلى المتجر (تحافظ على تاريخ نظيف وتمنع الازدواجية)
+  function smartNavigateToBoutique() {
+    // منع النقر المتكرر أثناء التنقل
+    if (isNavigating) {
+      debugLog('تنقل قيد التقدم، تجاهل النقرة.');
+      showSmartToast('جاري التوجيه، انتظر لحظة', 1200);
+      return;
+    }
+    
+    // التحقق من أننا بالفعل في شاشة الترحيب (لم نغادر بعد)
+    const welcomeDiv = document.getElementById('welcome');
+    if (!welcomeDiv) {
+      debugLog('عنصر الترحيب غير موجود، ربما تم الخروج');
+      window.location.replace(CONFIG.boutiquePath);
+      return;
+    }
+    
+    // قبل الانتقال، نحتاج إلى دفع حالة تمثل مغادرة شاشة الترحيب؟ لا نحتاج بالضبط، لكن 
+    // نود أن يحافظ المستخدم عند الرجوع على تجربة سليمة.
+    // استراتيجية ذكية: عند الذهاب إلى المتجر، نستخدم replaceState للحالة الحالية لجعل 
+    // الضغط على back يعود إلى نقطة دخول نظيفة (لا يوجد إدخال مزدوج)، ثم ننتقل.
+    // لكن لضمان أن back سيعيد المستخدم إلى هذه الشاشة بالشكل الصحيح بدون تكرار، نستبدل الحالة الحالية
+    // بحالة ترحيب نهائية ثم نوجه. هذا يحسن تجربة history.
+    try {
+      isNavigating = true;
+      if (shopBtn) shopBtn.classList.add('btn-loading');
+      
+      // إنشاء حالة ختامية للترحيب (غير ضرورية لكنها تحافظ على السياق) ثم نقوم باستبدالها قبل المغادرة
+      const finalWelcomeState = createStateObject({ willLeave: true, timestamp: Date.now() });
+      window.history.replaceState(finalWelcomeState, document.title, window.location.href);
+      debugLog('تم تحديث الحالة قبل المغادرة إلى المتجر');
+      
+      // إضافة إشارة صغيرة للمستخدم بأنه جاري التوجيه
+      showSmartToast('🐾 جاري نقلك إلى متجر chaiti...', 1000);
+      
+      // تأخير بسيط جداً لضمان تحديث الواجهة وإعطاء انطباع سلس (اختياري)
+      setTimeout(() => {
+        // استخدام replace للملاحة بشكل آمن (لا يتراكم سجل زائد)
+        // هذا يتيح زر الرجوع يعيد المستخدم إلى شاشة الترحيب مباشرة دون تكرار.
+        window.location.replace(CONFIG.boutiquePath);
+      }, 40);
+    } catch (err) {
+      debugLog('خطأ أثناء التنقل الذكي:', err);
+      // فشل آمن: الانتقال المباشر
+      window.location.href = CONFIG.boutiquePath;
+    } finally {
+      // لن نعيد تعيين isNavigating فوراً بسبب التأخير ولكن نتأكد من تحريره لو حدث خطأ
+      setTimeout(() => {
+        isNavigating = false;
+        if (shopBtn) shopBtn.classList.remove('btn-loading');
+      }, 300);
+    }
+  }
+
+  // ربط الحدث بالزر مع دعم للمسؤولية الكاملة
+  function bindSmartNavigation() {
+    if (!shopBtn) {
+      debugLog('زر الدخول غير موجود في DOM');
+      return;
+    }
+    // إزالة المستمع القديم لتجنب التكرار
+    const newBtn = shopBtn.cloneNode(true);
+    shopBtn.parentNode?.replaceChild(newBtn, shopBtn);
+    const finalBtn = document.getElementById('shopEntryBtn');
+    if (finalBtn) {
+      finalBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        smartNavigateToBoutique();
+      });
+      debugLog('تم ربط حدث النقر الذكي بالزر');
+    } else {
+      // Fallback
+      const fallbackBtn = document.querySelector('.w-cta');
+      if (fallbackBtn) {
+        fallbackBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          smartNavigateToBoutique();
+        });
+      }
+    }
+  }
+
+  // استعادة الحالة عند تحميل الصفحة بالكامل (إذا تم إعادة تحميل الصفحة من back/forward)
+  function restoreOnLoad() {
+    const currentState = getCurrentHistoryState();
+    if (currentState && currentState.type === CONFIG.WELCOME_STATE_KEY) {
+      debugLog('استعادة الحالة عند التحميل', currentState);
+      currentStateId = currentState.id;
+      currentWelcomeActive = true;
+    } else if (!currentState) {
+      // إذا لم توجد حالة بعد التحميل (نادر) نقوم بتهيئة آمنة
+      replaceWelcomeState();
+    }
+    // التأكد من أن شاشة الترحيب مرئية
+    const welcomeDiv = document.getElementById('welcome');
+    if (welcomeDiv) welcomeDiv.style.display = 'flex';
+  }
+
+  // =========== تنفيذ إدارة الحالة الذكية ==========
+  function bootstrap() {
+    initHistoryManager();
+    bindSmartNavigation();
+    restoreOnLoad();
+    // يمكن إضافة ميزة إضافية : مراقبة أحداث beforeunload لحفظ الحالة النهائية (اختياري)
+    window.addEventListener('beforeunload', () => {
+      debugLog('المستخدم يغادر الصفحة، الحالة محفوظة في history.');
+    });
+    debugLog('✅ Smart History State Manager يعمل بنجاح');
+  }
+  
+  // بدء المدير بعد تحميل DOM بالكامل
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootstrap);
+  } else {
+    bootstrap();
+  }
+})();
+
+// دالة showToast محفوظة للاستخدام العام (اختياري)
 function showToast(message) {
   const toast = document.getElementById('toast');
+  if (!toast) return;
   toast.textContent = message;
   toast.classList.add('on');
   setTimeout(() => {
@@ -340,4 +653,4 @@ function showToast(message) {
 </script>
 
 </body>
-</html>
+              </html>

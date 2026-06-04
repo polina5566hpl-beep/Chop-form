@@ -93,21 +93,9 @@ body {
   margin-bottom: 1rem;
   display: block;
 }
-.cart-empty .shop-link {
-  display: inline-block;
-  margin-top: 1.5rem;
-  background: var(--grad-action);
-  color: #fff;
-  text-decoration: none;
-  padding: 0.7rem 2rem;
-  border-radius: var(--r-md);
-  font-weight: 600;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.cart-empty .shop-link:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(194,94,58,.3);
-}
+
+/* تم إزالة زر "اكتشف المنتجات" بالكامل، مع الاحتفاظ بكل الأنماط الأخرى السليمة */
+/* لم يعد يوجد رابط shop-link أو أي عنصر تفاعلي للعودة للمتجر من داخل حالة الفارغة */
 
 /* ─── عنصر منتج في السلة ─── */
 .cart-item {
@@ -351,7 +339,6 @@ function loadCart() {
   if (saved) {
     try {
       const parsedCart = JSON.parse(saved);
-      // تحقق من صحة البيانات وأيضاً تأكد أنها مصفوفة وليست فارغة بشكل غير متوقع (نقبل حتى الفارغة)
       if (Array.isArray(parsedCart)) {
         cart = parsedCart;
       } else {
@@ -361,12 +348,11 @@ function loadCart() {
       cart = []; 
     }
   } else {
-    // ⚡ الإصلاح الجوهري: لم نعد نضيف منتجات وهمية تلقائياً.
-    // السلة تبدأ فارغة تماماً بدون أي منتج افتراضي.
+    // السلة تبدأ فارغة تماماً بدون أي منتج افتراضي
     cart = [];
   }
   
-  // تطهير إضافي: التأكد من أن كل عنصر يحتوي على الخصائص الأساسية وإزالة أي عناصر تالفة
+  // تطهير: التأكد من أن كل عنصر يحتوي على الخصائص الأساسية وإزالة أي عناصر تالفة
   cart = cart.filter(item => item && typeof item === 'object' && item.id && item.name && typeof item.price === 'number' && typeof item.qty === 'number' && item.qty > 0);
   
   // في حال وجود أي عنصر بدون imgs نحاول ترميمه من PRODUCTS
@@ -376,7 +362,6 @@ function loadCart() {
       if (original) {
         item.imgs = original.imgs;
       } else {
-        // إذا لم نجد المنتج في القائمة، نضع صورة افتراضية عامة ونبقي الاسم
         item.imgs = ['https://via.placeholder.com/80?text=Cat'];
       }
     }
@@ -414,29 +399,23 @@ function updateCartDisplay() {
   const container = document.getElementById('cartContent');
   if (!container) return;
 
-  // حالة السلة فارغة (بعد الإصلاح تصبح فارغة فعلاً بدون منتجات تلقائية)
+  // حالة السلة فارغة (بدون أي أزرار تسوق أو ارتباطات خارجية)
   if (!cart.length) {
+    // تم إزالة زر "اكتشف المنتجات" بالكامل — لا رابط shop-link
     container.innerHTML = `
       <div class="cart-items">
         <div class="cart-empty">
           <i class="fas fa-shopping-bag"></i>
           <p>سلة المشتريات فارغة حالياً</p>
-          <a href="#" class="shop-link" id="emptyShopLink">🐾 اكتشف المنتجات</a>
         </div>
       </div>
     `;
-    const shopLink = document.getElementById('emptyShopLink');
-    if (shopLink) shopLink.addEventListener('click', (e) => { 
-      e.preventDefault(); 
-      window.location.href = 'index.html'; 
-    });
     return;
   }
 
   // بناء قائمة المنتجات في السلة
   let itemsHtml = '';
   cart.forEach((item, idx) => {
-    // أخذ أول صورة من imgs إن وجدت
     const imgSrc = item.imgs && item.imgs[0] ? item.imgs[0] : 'https://via.placeholder.com/80?text=Cat';
     const itemTotal = item.price * item.qty;
     itemsHtml += `
@@ -494,8 +473,6 @@ function updateCartDisplay() {
 
   // ربط أحداث التحكم بالكمية والحذف
   document.querySelectorAll('.qty-btn').forEach(btn => {
-    // إزالة أي مستمع قديم وتجنب الازدواجية عبر استخدام onclick جديد؟ الأفضل addEventListener بشرط عدم تكرار
-    // نستخدم استنساخ بسيط للحدث ولكن لا بأس بإضافة مستمع جديد، نمنع التكرار عبر إزالة القديم بطريقة غير مباشرة؟ لكن العناصر جديدة فالمستمعات جديدة.
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const id = parseInt(btn.dataset.id);
@@ -513,11 +490,10 @@ function updateCartDisplay() {
     });
   });
 
-  // ربط زر إتمام الطلب مع ضمان فتح Order.html وفحص السلة أولاً
+  // ربط زر إتمام الطلب مع التحقق من عدم وجود سلة فارغة
   const checkoutBtn = document.getElementById('checkoutBtn');
   if (checkoutBtn) {
-    // نستخدم استنساخ لتفادي تكرار المستمعات (لكن العنصر جديد أصلاً فلا حاجة)
-    // لكن للتأكد من عدم وجود مستمعات سابقة (لأن updateCartDisplay تعيد إنشاء الـ HTML)
+    // استنساخ للتأكد من عدم تكرار المستمعات
     const newCheckoutBtn = checkoutBtn.cloneNode(true);
     checkoutBtn.parentNode.replaceChild(newCheckoutBtn, checkoutBtn);
     
@@ -565,17 +541,7 @@ function removeItem(id) {
   }
 }
 
-// دالة لتطهير السلة بالكامل (اختيارية ولكنها للاستخدام المستقبلي)
-function clearCartIfNeeded() {
-  // نضمن أنه لا توجد أي بيانات قديمة خاطئة.
-  if (cart.some(item => item.qty <= 0)) {
-    cart = cart.filter(item => item.qty > 0);
-    saveCart();
-    updateCartDisplay();
-  }
-}
-
-// دالة مساعدة للـ escapeHtml
+// دالة مساعدة لـ escapeHtml
 function escapeHtml(str) {
   if (!str) return '';
   return str.replace(/[&<>]/g, function(m) {
@@ -586,18 +552,15 @@ function escapeHtml(str) {
   });
 }
 
-// دالة إعادة تهيئة ومسح أي بيانات خاطئة من localStorage بالكامل إذا رغب المستخدم (ولكن ليس تلقائياً، بل يمكن استدعاؤها فقط إذا أردنا)
-// لكننا لن نمسح بيانات المستخدم الحقيقية، فقط نضمن بداية نظيفة بدون منتجات زائفة.
-
 // تهيئة الصفحة
 function init() {
-  // الخطوة الأولى: تحميل السلة من localStorage (لن تضع منتجات وهمية أبداً الآن)
+  // تحميل السلة من localStorage (لن تضع منتجات وهمية)
   loadCart();
   
-  // تطهير إضافي: إذا كان هناك أي منتج بالخطأ ليس له id صحيح أو صفرية الكمية
+  // تطهير إضافي للتأكد من عدم وجود منتجات غير صالحة
   cart = cart.filter(item => item && item.id && item.qty > 0 && typeof item.price === 'number' && item.price > 0);
   
-  // إذا كان هناك مشكلة في الصور مثلاً نصححها
+  // تصحيح مشكلة الصور لأي عنصر قديم
   cart = cart.map(item => {
     if (!item.imgs || !item.imgs.length) {
       const originalProduct = PRODUCTS.find(p => p.id === item.id);
@@ -610,13 +573,13 @@ function init() {
     return item;
   });
   
-  // نعيد حفظ السلة بعد التنظيف للتأكد من المزامنة
+  // إعادة حفظ السلة بعد التنظيف
   saveCart();
   
   // تحديث العرض
   updateCartDisplay();
   
-  // إضافة مستمع لحدث storage للتحديث بين النوافذ إذا فتح أكثر من تاب
+  // الاستماع للتغييرات في localStorage من نوافذ أخرى
   window.addEventListener('storage', (e) => {
     if (e.key === 'chaiti_cart') {
       loadCart();
@@ -629,4 +592,4 @@ function init() {
 init();
 </script>
 </body>
-</html>
+  </html>

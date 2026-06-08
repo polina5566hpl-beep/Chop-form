@@ -64,15 +64,15 @@
     visibility: visible;
     opacity: 1;
 }
-
-/* السلة الجانبية - معدلة للفتح من اليسار */
+/* جعل السلة منفصلة عن الصفحة الداخلية مع زوايا منحنية */
 .cart-sidebar {
     position: fixed;
-    top: 0;
+    top: 20px;
+    bottom: 20px;
     left: -400px;
     width: 100%;
     max-width: 400px;
-    height: 100vh;
+    height: auto;
     background: #2c3e50;
     box-shadow: 5px 0 25px rgba(0, 0, 0, 0.15);
     z-index: 1002;
@@ -80,10 +80,33 @@
     display: flex;
     flex-direction: column;
     font-family: 'Tajawal', sans-serif;
+    border-radius: 20px;
+    overflow: hidden;
 }
 
 .cart-sidebar.open {
-    left: 0;
+    left: 2px;
+}
+
+.cart-header {
+    border-radius: 20px 20px 0 0;
+}
+
+.cart-footer {
+    border-radius: 0 0 20px 20px;
+}
+
+.cart-overlay.active {
+    visibility: visible;
+    opacity: 1;
+    backdrop-filter: blur(3px);
+}
+
+/* ✅ منع تمرير الصفحة الرئيسية عند فتح السلة */
+body:has(.cart-sidebar.open) {
+    overflow: hidden !important;
+    position: fixed !important;
+    width: 100% !important;
 }
 
 /* رأس السلة */

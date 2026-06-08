@@ -265,9 +265,6 @@ class ShoppingCart {
                 <span>الإجمالي:</span>
                 <span>${this.formatPrice(total)} دج</span>
             </div>
-            <div class="shipping-note">
-                <i class="fas fa-truck"></i> توصيل سريع لجميع الولايات
-            </div>
             <button class="checkout-btn">
                 <i class="fas fa-credit-card"></i> إتمام الشراء
             </button>

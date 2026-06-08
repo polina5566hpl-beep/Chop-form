@@ -1,0 +1,402 @@
+/* button.css */
+/* زر القائمة الرئيسي الموجود في HTML */
+.menu-btn {
+  position: fixed;
+  top: 6px;
+  right: 12px;
+  width: 42px !important;
+  height: 42px !important;
+   background: linear-gradient(135deg, #e9a84c 0%, #c97d3a 45%, #c25e3a 80%, #9e3a3a 100%);
+  border: none;
+  font-size: 25px !important;
+  padding: 0 !important;
+  cursor: pointer;
+  border-radius: 12px;
+  z-index: 1001;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.menu-btn:hover {
+  background-color: #e67e22;
+  transform: scale(1.05);
+}
+
+.menu-btn:active {
+  transform: scale(0.95);
+}
+
+/* القائمة الجانبية */
+.side-menu {
+  position: fixed;
+  top: 0;
+  right: -280px;
+  width: 280px;
+  height: 100%;
+  background-color: #2c3e50;
+  color: white;
+  z-index: 1000;
+  transition: right 0.3s ease;
+  padding-top: 10px;
+  box-shadow: -2px 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.side-menu.open {
+  right: 0;
+}
+
+/* رأس القائمة */
+.side-menu .side-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  margin-bottom: 10px;
+}
+
+.side-menu .menu-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.side-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.side-menu li {
+  padding: 15px 25px;
+  border-bottom: 1px solid #3e5a6b;
+  transition: 0.2s;
+}
+
+.side-menu li:hover {
+  background-color: #1a2a3a;
+}
+
+.side-menu li a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  display: block;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.side-menu li a:hover {
+  color: #e67e22;
+  padding-right: 8px;
+}
+
+/* خلفية القائمة الجانبية */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: none;
+}
+
+.overlay.show {
+  display: block;
+}
+
+/* زر إغلاق القائمة الجانبية */
+.close-menu-btn {
+  background: none;
+  border: none;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #ffffff;
+  padding: 0;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.close-menu-btn:hover {
+  color: #ff4444;
+  background: rgba(255, 255, 255, 0.1);
+  transform: rotate(90deg);
+}
+
+/* ========== النوافذ المنبثقة ========== */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 2000;
+  display: none;
+  backdrop-filter: blur(3px);
+}
+
+.popup-overlay.show {
+  display: block;
+}
+
+.popup-window {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  width: 90%;
+  max-width: 450px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  z-index: 2001;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  direction: rtl;
+}
+
+.popup-window.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.popup-content {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.popup-header {
+  background: #e9a84c;
+  color: white;
+  padding: 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.popup-header h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.popup-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  transition: 0.2s;
+  line-height: 1;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.popup-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg);
+}
+
+.popup-body {
+  padding: 25px 20px;
+  color: #333;
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+/* تنسيق التوصيل */
+.delivery-card {
+  text-align: center;
+  font-family: 'Cairo', 'Tahoma', sans-serif;
+}
+
+.delivery-icon {
+  font-size: 48px;
+  color: #e9a84c;
+  margin-bottom: 15px;
+}
+
+.delivery-info p {
+  margin: 12px 0;
+  font-size: 15px;
+  background: #f8f9fa;
+  padding: 8px 12px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+}
+
+.delivery-info i {
+  width: 24px;
+  color: #e9a84c;
+}
+
+.highlight-price {
+  font-weight: bold;
+  color: #e67e22;
+  font-size: 18px;
+}
+
+/* تنسيق الأسئلة الشائعة */
+.faq-card {
+  font-family: 'Cairo', 'Tahoma', sans-serif;
+  direction: rtl;
+}
+
+.faq-category {
+  margin-bottom: 12px;
+}
+
+.faq-category h3 {
+  color: #2c3e50;
+  font-size: 16px;
+  padding: 6px 0;
+  border-bottom: 2px solid #e9a84c;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.faq-category h3 i {
+  color: #e9a84c;
+}
+
+.faq-item {
+  margin-bottom: 6px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
+.faq-question {
+  background: #f8f9fa;
+  padding: 10px 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: #2c3e50;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+}
+
+.faq-question:hover {
+  background: #f0f2f5;
+}
+
+.faq-question i:first-child {
+  color: #e9a84c;
+  transition: transform 0.3s ease;
+  font-size: 13px;
+}
+
+.faq-question span {
+  flex: 1;
+  font-size: 14px;
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  background: white;
+  padding: 0 14px;
+  color: #555;
+  line-height: 1.5;
+  font-size: 13px;
+  border-top: 0px solid #eee;
+}
+
+.faq-item.active .faq-answer {
+  max-height: 200px;
+  padding: 8px 14px;
+  border-top-width: 1px;
+}
+
+.faq-item.active .faq-question i:first-child {
+  transform: rotate(-90deg);
+}
+
+/* تحسين للأجهزة الصغيرة */
+@media (max-width: 500px) {
+  .side-menu {
+    width: 260px;
+  }
+  
+  .popup-window {
+    width: 92%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  .faq-category h3 {
+    font-size: 14px;
+  }
+  
+  .faq-question {
+    padding: 8px 12px;
+  }
+  
+  .faq-question span {
+    font-size: 12px;
+  }
+  
+  .faq-item.active .faq-answer {
+    padding: 8px 12px;
+    font-size: 12px;
+    max-height: 150px;
+  }
+}
+
+.popup-window::-webkit-scrollbar {
+  width: 5px;
+}
+
+.popup-window::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.popup-window::-webkit-scrollbar-thumb {
+  background: #e9a84c;
+  border-radius: 10px;
+}
+
+/* منع الترميش */
+.side-menu li,
+.side-menu li a,
+.side-menu .close-menu-btn,
+.menu-btn,
+.popup-window button,
+.popup-window .popup-close,
+.popup-window .faq-question,
+.popup-window a {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}

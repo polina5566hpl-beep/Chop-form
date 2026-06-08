@@ -1,0 +1,646 @@
+/* ===== استمارة الطلب ===== */
+.order-section {
+    max-width: 1200px;
+    margin: 3rem auto 2rem;
+    padding: 0rem;
+}
+
+.order-container {
+    background: linear-gradient(135deg, #ffffff 0%, #fef9f0 100%);
+    border-radius: 40px;
+    box-shadow: 0 20px 40px rgba(180, 100, 40, 0.12);
+    overflow: hidden;
+    border: 1px solid rgba(201, 125, 58, 0.2);
+}
+
+.order-header {
+    background: linear-gradient(135deg, #e9a84c 0%, #c97d3a 45%, #c25e3a 80%, #9e3a3a 100%);
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.order-header h2 {
+    color: white;
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.order-header h2 i {
+    font-size: 1.8rem;
+}
+
+.order-form {
+    padding: 2rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* ضمان أن كل form-row له عمودين (للاسم والهاتف، والولاية والبلدية) */
+.form-row:first-child,
+.form-row:has(select#wilaya) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+/* ===== إخفاء التسميات القديمة ===== */
+.form-group label {
+    display: none;
+}
+
+/* ===== تنسيق الحقول مع الأيقونات داخلها ===== */
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.9rem 1rem 0.9rem 1rem;
+    border: 2px solid #e8dcc8;
+    border-radius: 20px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+    outline: none;
+    box-sizing: border-box;
+    direction: rtl;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #c97d3a;
+    box-shadow: 0 0 0 3px rgba(201, 125, 58, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* ===== تنسيق الـ placeholder ===== */
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #999;
+    font-size: 0.95rem;
+    font-weight: 400;
+}
+
+/* ===== تنسيق الـ select ===== */
+.form-group select {
+    cursor: pointer;
+    background-color: white;
+    color: #333;
+}
+
+.form-group select option {
+    padding: 10px;
+}
+
+/* ===== تنسيق خاص لحقل رقم الهاتف (اتجاه يسار للأرقام) ===== */
+#phoneNumber {
+    direction: ltr;
+    text-align: left;
+}
+
+#phoneNumber::placeholder {
+    direction: rtl;
+    text-align: right;
+}
+
+/* ===== تنسيق خاص لحقل البلدية ===== */
+#commune {
+    direction: rtl;
+    text-align: right;
+}
+
+/* ===== تنسيق خاص لقائمة الولايات ===== */
+#wilaya {
+    direction: rtl;
+    text-align: right;
+}
+
+/* ===== المنتجات المختارة ===== */
+.selected-products {
+    background: #fdf8f2;
+    border-radius: 20px;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(201, 125, 58, 0.2);
+}
+
+.selected-products h3 {
+    font-size: 1.1rem;
+    color: #2d1f0e;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.products-list {
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.product-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #e8dcc8;
+}
+
+.product-item:last-child {
+    border-bottom: none;
+}
+
+.product-name {
+    font-weight: 500;
+    color: #2d1f0e;
+}
+
+.product-price {
+    color: #c97d3a;
+    font-weight: 700;
+}
+
+.total-price {
+    margin-top: 0.8rem;
+    padding-top: 0.8rem;
+    border-top: 2px dashed #c97d3a;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: #2d1f0e;
+}
+
+.total-price span:last-child {
+    color: #c97d3a;
+    font-size: 1.3rem;
+}
+
+/* ===== تنسيق الأزرار (تم التعديل - زر كبير في الوسط) ===== */
+.form-actions {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.submit-btn {
+    background: linear-gradient(135deg, #e9a84c 0%, #c97d3a 45%, #c25e3a 80%, #9e3a3a 100%);
+    color: white;
+    border: none;
+    padding: 1.3rem 3.5rem;
+    border-radius: 50px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    font-family: 'Cairo', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-block;
+    gap: 1rem;
+    min-width: 300px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+}
+.submit-btn i {
+    font-size: 1.6rem;
+    margin-left: 0.75rem;
+}
+
+.submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(201, 125, 58, 0.4);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+/* ===== رسائل التنبيه ===== */
+.alert-message {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    left: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 500;
+    text-align: center;
+    z-index: 1000;
+    animation: slideUp 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.alert-success {
+    background: #27ae60;
+    color: white;
+}
+
+.alert-error {
+    background: #e74c3c;
+    color: white;
+}
+
+.alert-warning {
+    background: #f39c12;
+    color: white;
+}
+.alert-info {
+    background: #3498db;
+    color: white;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ===== التجاوب مع الشاشات الصغيرة ===== */
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+    
+    .form-row:first-child,
+    .form-row:has(select#wilaya) {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+    
+    .form-row:not(:last-child) {
+        margin-bottom: 0;
+    }
+    
+    .order-form {
+        padding: 1.5rem;
+    }
+    
+    .order-header h2 {
+        font-size: 1.4rem;
+    }
+    
+    .order-header h2 i {
+        font-size: 1.4rem;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 0.95rem;
+        padding: 0.8rem 1rem;
+    }
+    
+    .form-actions {
+        margin-top: 1.5rem;
+    }
+    
+    .submit-btn {
+        padding: 1rem 2rem;
+        font-size: 1.2rem;
+        min-width: 240px;
+    }
+    
+    .submit-btn i {
+        font-size: 1.3rem;
+    }
+    
+    .alert-message {
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        font-size: 0.9rem;
+        padding: 0.8rem 1rem;
+    }
+    
+    .total-price {
+        font-size: 1rem;
+    }
+    
+    .total-price span:last-child {
+        font-size: 1.1rem;
+    }
+}
+
+/* ===== تحسينات إضافية ===== */
+
+/* تحسين التمرير لقائمة المنتجات */
+.products-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.products-list::-webkit-scrollbar-track {
+    background: #e8dcc8;
+    border-radius: 10px;
+}
+
+.products-list::-webkit-scrollbar-thumb {
+    background: #c97d3a;
+    border-radius: 10px;
+}
+
+/* تحسين ظهور الحقول على الشاشات المتوسطة */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .order-form {
+        padding: 1.8rem;
+    }
+    
+    .form-row {
+        gap: 1.2rem;
+    }
+    
+    .form-row:first-child,
+    .form-row:has(select#wilaya) {
+        gap: 1.2rem;
+    }
+}
+
+/* تحسين للشاشات الكبيرة جداً */
+@media (min-width: 1400px) {
+    .order-section {
+        max-width: 1400px;
+    }
+    
+    .order-form {
+        padding: 2.5rem;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 1rem 1.2rem;
+        font-size: 1.05rem;
+    }
+}
+
+/* تحسين مظهر الحقول عند التعبئة */
+.form-group input:valid:not(:placeholder-shown),
+.form-group select:valid,
+.form-group textarea:valid:not(:placeholder-shown) {
+    border-color: #27ae60;
+    background-color: #f0fff4;
+}
+
+/* تنسيق رسائل الخطأ */
+.error-message {
+    color: #e74c3c;
+    font-size: 0.8rem;
+    margin-top: 0.3rem;
+    margin-right: 0.5rem;
+    display: block;
+}
+
+/* تحسين مظهر الحقل عند وجود خطأ */
+.form-group input.error,
+.form-group select.error,
+.form-group textarea.error {
+    border-color: #e74c3c;
+    background-color: #fff5f5;
+}
+
+/* ===== جعل الاسم والهاتف في نفس السطر ===== */
+.form-row:first-child {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+/* ===== جعل الولاية والبلدية في نفس السطر ===== */
+.form-row:has(select#wilaya) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+/* دعم للمتصفحات القديمة */
+.form-row.wilaya-commune-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.form-row.name-phone-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+/* تحسين للشاشات الكبيرة - جعل الزر أكبر */
+@media (min-width: 768px) {
+    .submit-btn {
+        padding: 1.5rem 4rem;
+        font-size: 1.6rem;
+        min-width: 350px;
+    }
+    
+    .submit-btn i {
+        font-size: 1.8rem;
+    }
+    
+    
+    /* ===== تنسيق زر الإرسال أثناء التحميل ===== */
+.submit-btn:disabled {
+    opacity: 0.7;
+    cursor: wait;
+    transform: none;
+}
+
+/* إضافة Spinner على الزر أثناء الإرسال */
+.submit-btn.loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.submit-btn.loading::after {
+    content: "";
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    top: 50%;
+    right: 20px;
+    margin-top: -12px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+}
+/* ===== إطار الشكر الأبيض (Modal) ===== */
+.thankyou-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20000;
+    animation: fadeIn 0.3s ease;
+    direction: rtl;
+}
+
+.thankyou-modal-content {
+    background: white;
+    border-radius: 30px;
+    padding: 2.5rem;
+    max-width: 450px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    animation: scaleIn 0.3s ease;
+}
+
+.thankyou-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+}
+
+.thankyou-icon i {
+    font-size: 45px;
+    color: white;
+}
+
+.thankyou-modal-content h2 {
+    color: #2d1f0e;
+    font-size: 28px;
+    margin-bottom: 0.5rem;
+    font-weight: 800;
+}
+
+.thankyou-modal-content p {
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 1rem;
+}
+
+.thankyou-order-id {
+    background: #fdf8f2;
+    padding: 12px 20px;
+    border-radius: 50px;
+    margin: 1.5rem 0;
+    border: 1px solid #e8dcc8;
+}
+
+.thankyou-order-id span {
+    color: #666;
+    font-size: 14px;
+}
+
+.thankyou-order-id strong {
+    color: #c97d3a;
+    font-size: 18px;
+    margin-right: 8px;
+    font-weight: 800;
+}
+
+.thankyou-message {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 1.5rem;
+}
+
+.thankyou-btn {
+    background: linear-gradient(135deg, #e9a84c 0%, #c97d3a 45%, #c25e3a 80%, #9e3a3a 100%);
+    color: white;
+    border: none;
+    padding: 12px 35px;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Cairo', sans-serif;
+}
+
+.thankyou-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(201, 125, 58, 0.4);
+}
+
+.thankyou-modal.fade-out {
+    animation: fadeOut 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 480px) {
+    .thankyou-modal-content {
+        padding: 1.8rem;
+        width: 85%;
+    }
+    
+    .thankyou-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .thankyou-icon i {
+        font-size: 30px;
+    }
+    
+    .thankyou-modal-content h2 {
+        font-size: 22px;
+    }
+    
+    .thankyou-order-id strong {
+        font-size: 14px;
+    }
+}

@@ -1,42 +1,5 @@
 // ===== استمارة الطلب =====
 
-// --- Smart Navigation History ---
-// تم دمج هذا الكود خصيصاً لملف order.js
-(function() {
-    const sectionName = 'order'; // الاسم الخاص بقسم استمارة الطلب
-
-    // 1. عند فتح القسم، أضف الرابط للمتصفح (سيتم استدعاؤها من showOrderForm)
-    window.openOrderSection = function() {
-        window.location.hash = sectionName;
-    };
-
-    // 2. عند إغلاق القسم، ارجع للرئيسية (سيتم استدعاؤها من hideOrderFormAndShowProducts و resetAfterOrder)
-    window.closeOrderSection = function() {
-        if(window.location.hash === '#' + sectionName) {
-            window.history.back();
-        }
-    };
-
-    // 3. الاستماع لزر الرجوع: إذا كان الـ hash يخص هذا القسم، أغلقه
-    window.addEventListener('hashchange', function() {
-        if (window.location.hash !== '#' + sectionName) {
-            // المستخدم خرج من قسم الطلب (ضغط رجوع)
-            // استدعِ دالة الإغلاق الخاصة بالاستمارة إذا كانت مفتوحة
-            const orderSection = document.getElementById('orderSection');
-            if (orderSection && orderSection.style.display === 'block') {
-                // استدعاء نفس منطق hideOrderFormAndShowProducts ولكن بدون التمرير لتجربة أفضل
-                const gallery = document.querySelector('.gallery');
-                const galleryHeader = document.querySelector('.gallery-header');
-                
-                if (orderSection) orderSection.style.display = 'none';
-                if (gallery) gallery.style.display = 'block';
-                if (galleryHeader) galleryHeader.style.display = 'block';
-            }
-        }
-    });
-})();
-// --- نهاية كود Smart Navigation History ---
-
 // ===== بيانات الولايات والبلديات =====
 const wilayaCommunes = {
     "عنابة": [
@@ -205,11 +168,6 @@ function hideOrderFormAndShowProducts() {
     if (gallery) {
         gallery.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-    
-    // استدعاء دالة إغلاق القسم في تاريخ المتصفح
-    if (typeof window.closeOrderSection === 'function') {
-        window.closeOrderSection();
-    }
 }
 
 // إظهار الاستمارة وإخفاء المنتجات
@@ -230,11 +188,6 @@ function showOrderForm() {
     if (orderSection) {
         orderSection.style.display = 'block';
         orderSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-    
-    // استدعاء دالة فتح القسم لإضافة الرابط في تاريخ المتصفح
-    if (typeof window.openOrderSection === 'function') {
-        window.openOrderSection();
     }
 }
 
@@ -402,11 +355,6 @@ function resetAfterOrder() {
     if (galleryHeader) {
         galleryHeader.style.display = 'block';
     }
-    
-    // استدعاء دالة إغلاق القسم في تاريخ المتصفح
-    if (typeof window.closeOrderSection === 'function') {
-        window.closeOrderSection();
-    }
 }
 
 // تهيئة الاستمارة (تضاف للصفحة لكن مخفية)
@@ -554,6 +502,9 @@ window.openOrderForm = function(cartItems, total, shippingCost) {
     
     // إظهار الاستمارة وإخفاء المنتجات
     showOrderForm();
+    
+    // إضافة حالة لتاريخ المتصفح (Smart Navigation)
+    window.history.pushState({ section: 'order' }, "");
 };
 
 // دالة لإعادة إظهار المنتجات (يمكن استدعاؤها من مكان آخر)
@@ -561,9 +512,32 @@ window.showProductsOnly = function() {
     resetAfterOrder();
 };
 
+// ===== Smart Navigation History =====
+(function() {
+    // الاستماع لزر الرجوع
+    window.addEventListener('popstate', function(event) {
+        const orderSection = document.getElementById('orderSection');
+        // إذا كانت الاستمارة مفتوحة
+        if (orderSection && orderSection.style.display === 'block') {
+            // إغلاق الاستمارة وعرض المنتجات
+            const gallery = document.querySelector('.gallery');
+            const galleryHeader = document.querySelector('.gallery-header');
+            
+            orderSection.style.display = 'none';
+            if (gallery) gallery.style.display = 'block';
+            if (galleryHeader) galleryHeader.style.display = 'block';
+            
+            console.log("تم إغلاق الاستمارة عبر زر الرجوع");
+            
+            // منع السلوك الافتراضي للرجوع خارج الصفحة
+            event.preventDefault();
+        }
+    });
+})();
+
 // بدء التشغيل (إضافة الاستمارة مخفية)
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initOrderForm);
 } else {
     initOrderForm();
-            }
+        }

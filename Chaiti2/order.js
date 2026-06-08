@@ -355,7 +355,7 @@ function showThankYouModal(orderId) {
 // ===== إرسال الطلب إلى Google Script (بدون حفظ محلي) =====
 async function sendToGoogleScript(orderData) {
     try {
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbwhaNs8iEpEu-KLl_goUiHzAD_KAwkZ8lIIx7xTbgT4_nIP17qLrZZVFlkx9JQuQ9o3/exec';
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbzUAWcOGiSxQ2iE5Stl_X6Gx0CcyDAmAWp1ziO36ASMSMy1euA_nEvljooQ4vIzYP4t/exec';
         
         // إظهار رسالة "جاري الإرسال..."
         showOrderAlert('📡 جاري إرسال الطلب إلى الخادم...', 'info');

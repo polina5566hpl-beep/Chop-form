@@ -552,26 +552,6 @@
     margin-bottom: 1rem;
 }
 
-.thankyou-order-id {
-    background: #fdf8f2;
-    padding: 12px 20px;
-    border-radius: 50px;
-    margin: 1.5rem 0;
-    border: 1px solid #e8dcc8;
-}
-
-.thankyou-order-id span {
-    color: #666;
-    font-size: 14px;
-}
-
-.thankyou-order-id strong {
-    color: #c97d3a;
-    font-size: 18px;
-    margin-right: 8px;
-    font-weight: 800;
-}
-
 .thankyou-message {
     color: #888;
     font-size: 14px;
@@ -643,4 +623,4 @@
     .thankyou-order-id strong {
         font-size: 14px;
     }
-}
+    }

@@ -296,7 +296,7 @@ function showOrderAlert(message, type) {
 }
 
 // ===== إطار أبيض للشكر (Modal) =====
-function showThankYouModal(orderId) {
+function showThankYouModal() {
     // إزالة أي مودال موجود مسبقاً
     const existingModal = document.querySelector('.thankyou-modal');
     if (existingModal) existingModal.remove();
@@ -311,10 +311,6 @@ function showThankYouModal(orderId) {
             </div>
             <h2>شكراً لك!</h2>
             <p>تم استلام طلبك بنجاح</p>
-            <div class="thankyou-order-id">
-                <span>رقم الطلب:</span>
-                <strong>${orderId}</strong>
-            </div>
             <p class="thankyou-message">سيتم التواصل معكم قريباً لتأكيد الطلب</p>
             <button class="thankyou-btn" id="closeThankYouModal">حسناً</button>
         </div>
@@ -532,7 +528,7 @@ function initOrderForm() {
                 }
                 
                 // عرض إطار الشكر الأبيض بدلاً من confirm
-                showThankYouModal(orderId);
+                showThankYouModal();
                 
             } else {
                 // فشل الإرسال
@@ -570,4 +566,4 @@ if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initOrderForm);
 } else {
     initOrderForm();
-        }
+}

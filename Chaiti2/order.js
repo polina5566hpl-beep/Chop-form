@@ -304,7 +304,7 @@ function showThankYouModal() {
 // ===== إرسال الطلب إلى Google Script (بدون حفظ محلي) =====
 async function sendToGoogleScript(orderData) {
     try {
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbyNdvQDzSEfFt5rYjMg6qpf5-MNFWxDnsBYonFlDFREAsq1oqbm5AgE4aLbbAQmYuzQ/exec';
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbxQC1npIP5f-TKy-9x3K2d_odSbwTS9BgDFUs4R29_Cv2OERqe-Ma42OMbTXW1fEygi/exec';
         
         // إظهار رسالة "جاري الإرسال..."
         showOrderAlert('📡 جاري إرسال الطلب إلى الخادم...', 'info');
@@ -540,4 +540,4 @@ if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initOrderForm);
 } else {
     initOrderForm();
-                                   }
+            }

@@ -121,7 +121,7 @@ function addOrderFormToPage() {
                         </div>
                     </div>
                     
-                    <button type="submit" class="submit-btn">
+                    <button type="submit" class="submit-btn" id="submitOrderBtn">
                         <i class="fas fa-check-circle"></i>
                         تأكيد الطلب
                     </button>
@@ -301,6 +301,19 @@ function showThankYouModal() {
     });
 }
 
+// ===== دوال التحقق =====
+function validateFullName(name) {
+    // يسمح فقط بالحروف العربية والإنجليزية والمسافات
+    const nameRegex = /^[a-zA-Z\u0621-\u064A\s]+$/;
+    return nameRegex.test(name) && name.trim().length >= 2;
+}
+
+function validatePhoneNumber(phone) {
+    // التحقق من رقم هاتف جزائري: 05, 06, 07 متبوع بـ 8 أرقام
+    const phoneRegex = /^(05|06|07)[0-9]{8}$/;
+    return phoneRegex.test(phone);
+}
+
 // ===== إرسال الطلب إلى Google Script (بدون حفظ محلي) =====
 async function sendToGoogleScript(orderData) {
     try {
@@ -369,17 +382,84 @@ function initOrderForm() {
             e.preventDefault();
             
             // تعطيل الزر لمنع الإرسال المتعدد
-            const submitBtn = document.querySelector('.submit-btn');
+            const submitBtn = document.getElementById('submitOrderBtn');
             if (submitBtn) {
                 submitBtn.disabled = true;
-                submitBtn.classList.add('loading');
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> جاري الإرسال...';
             }
             
+            // جلب القيم
             const fullName = document.getElementById('fullName')?.value.trim();
             const phoneNumber = document.getElementById('phoneNumber')?.value.trim();
             const wilaya = document.getElementById('wilaya')?.value;
             const commune = document.getElementById('commune')?.value;
             const address = document.getElementById('address')?.value.trim();
+            
+            // ===== التحقق من صحة الاسم =====
+            if (!fullName) {
+                showOrderAlert('يرجى إدخال الاسم الكامل', 'error');
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> تأكيد الطلب';
+                }
+                return;
+            }
+            
+            if (!validateFullName(fullName)) {
+                showOrderAlert('يرجى إدخال اسم صحيح (حروف فقط بدون رموز أو أرقام)', 'error');
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> تأكيد الطلب';
+                }
+                return;
+            }
+            
+            // ===== التحقق من صحة رقم الهاتف =====
+            if (!phoneNumber) {
+                showOrderAlert('يرجى إدخال رقم الهاتف', 'error');
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> تأكيد الطلب';
+                }
+                return;
+            }
+            
+            if (!validatePhoneNumber(phoneNumber)) {
+                showOrderAlert('رقم الهاتف غير صحيح. يجب أن يبدأ بـ 05 أو 06 أو 07 ويتكون من 10 أرقام', 'error');
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> تأكيد الطلب';
+                }
+                return;
+            }
+            
+            // ===== باقي التحققات =====
+            if (!wilaya) {
+                showOrderAlert('يرجى اختيار الولاية', 'error');
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> تأكيد الطلب';
+                }
+                return;
+            }
+            
+            if (!commune) {
+                showOrderAlert('يرجى اختيار البلدية', 'error');
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> تأكيد الطلب';
+                }
+                return;
+            }
+            
+            if (!address) {
+                showOrderAlert('يرجى إدخال العنوان التفصيلي', 'error');
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> تأكيد الطلب';
+                }
+                return;
+            }
             
             // جلب المنتجات من localStorage
             let products = [];
@@ -387,51 +467,11 @@ function initOrderForm() {
                 products = JSON.parse(localStorage.getItem('tempCartItems') || '[]');
             } catch(e) {}
             
-            if (!fullName) {
-                showOrderAlert('يرجى إدخال الاسم الكامل', 'error');
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('loading');
-                }
-                return;
-            }
-            if (!phoneNumber) {
-                showOrderAlert('يرجى إدخال رقم الهاتف', 'error');
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('loading');
-                }
-                return;
-            }
-            if (!wilaya) {
-                showOrderAlert('يرجى اختيار الولاية', 'error');
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('loading');
-                }
-                return;
-            }
-            if (!commune) {
-                showOrderAlert('يرجى اختيار البلدية', 'error');
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('loading');
-                }
-                return;
-            }
-            if (!address) {
-                showOrderAlert('يرجى إدخال العنوان التفصيلي', 'error');
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('loading');
-                }
-                return;
-            }
             if (!products || products.length === 0) {
                 showOrderAlert('لا توجد منتجات في السلة', 'error');
                 if (submitBtn) {
                     submitBtn.disabled = false;
-                    submitBtn.classList.remove('loading');
+                    submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> تأكيد الطلب';
                 }
                 return;
             }
@@ -483,7 +523,7 @@ function initOrderForm() {
                 showOrderAlert('❌ عذراً، حدث خطأ في إرسال الطلب. يرجى المحاولة مرة أخرى.', 'error');
                 if (submitBtn) {
                     submitBtn.disabled = false;
-                    submitBtn.classList.remove('loading');
+                    submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> تأكيد الطلب';
                 }
             }
         });
@@ -540,4 +580,4 @@ if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initOrderForm);
 } else {
     initOrderForm();
-                                     }
+}

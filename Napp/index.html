@@ -183,9 +183,8 @@
 <!-- TOAST -->
 <div class="toast" id="toast">✨ تمت إضافة النابيرون إلى السلة!</div>
 
-<!-- تحميل الملفات الخارجية -->
+<!-- ⚠️ مهم: تحميل ملف data-wilaya.js أولاً -->
 <script src="data-wilaya.js"></script>
-<!-- إذا لم تكن بحاجة إلى lightbox.js أو panier.js يمكنك إزالتهما، لكن أتركهما الآن -->
 <script src="lightbox.js"></script>
 <script src="panier.js"></script>
 
@@ -193,6 +192,7 @@
   // ========== دالة ملء قائمة الولايات من الملف الخارجي ==========
   function populateWilayas() {
     const wilayaSelect = document.getElementById('fwilaya');
+    // التحقق من وجود البيانات
     if (typeof wilayaCommunes === 'undefined') {
       console.error('❌ ملف data-wilaya.js غير محمل! تأكد من وجوده في نفس المجلد.');
       return;
@@ -200,6 +200,7 @@
     
     wilayaSelect.innerHTML = '<option value="">— اختر الولاية *</option>';
     
+    // ترتيب الولايات حسب الرقم
     const sortedWilayas = Object.keys(wilayaCommunes).sort((a, b) => {
       const numA = parseInt(a.split(' - ')[0]);
       const numB = parseInt(b.split(' - ')[0]);
@@ -361,7 +362,7 @@
     setTimeout(scrollToForm, 350); 
   };
   
-  // ========== دالة تأكيد الطلب (تم إصلاحها) ==========
+  // ========== دالة تأكيد الطلب ==========
   window.submitOrder = function() {
     const name = document.getElementById('fname').value.trim();
     const phone = document.getElementById('fphone').value.trim();
@@ -407,37 +408,31 @@
       orderDate: new Date().toISOString()
     };
     
-    // ⚠️ استبدل الرابط أدناه برابط تطبيق Google Apps Script الحقيقي الخاص بك
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzEvcx2yFa1MEYVjpSk9VARu9TOAuNILwAFF09jC4-ivGx3U4sL0RGxhJqWD0DkDdK5HQ/exec';
     
-    // ✅ تم إصلاح وضع CORS
     fetch(scriptURL, {
       method: 'POST',
-      mode: 'cors',                       // تم التغيير من 'no-cors' إلى 'cors'
+      mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(orderData)
     })
-    .then(response => response.json())    // ننتظر استجابة JSON حقيقية
-    .then(data => {
-      if (data && data.success) {
-        document.getElementById('successModal').classList.add('open');
-        cart = []; 
-        updateCartUI();
-        document.getElementById('fname').value = '';
-        document.getElementById('fphone').value = '';
-        document.getElementById('fwilaya').value = '';
-        document.getElementById('fcommune').innerHTML = '<option value="">— اختر البلدية *</option>';
-        document.getElementById('fcommune').disabled = true;
-        document.getElementById('faddress').value = '';
-        resetSelections();
-      } else {
-        showToast('❌ حدث خطأ في معالجة الطلب. الرجاء المحاولة مرة أخرى.');
-      }
+    .then(() => {
+      document.getElementById('successModal').classList.add('open');
+      cart = []; 
+      updateCartUI();
+      document.getElementById('fname').value = '';
+      document.getElementById('fphone').value = '';
+      document.getElementById('fwilaya').value = '';
+      document.getElementById('fcommune').innerHTML = '<option value="">— اختر البلدية *</option>';
+      document.getElementById('fcommune').disabled = true;
+      document.getElementById('faddress').value = '';
+      resetSelections();
+      
       submitBtn.disabled = false;
       submitBtn.innerText = '✅ تأكيد الطلب';
     })
     .catch(() => {
-      showToast('❌ فشل الإرسال، تأكد من اتصالك وحاول مرة أخرى');
+      showToast('❌ فشل الإرسال، حاول مرة أخرى');
       submitBtn.disabled = false;
       submitBtn.innerText = '✅ تأكيد الطلب';
     });
@@ -457,9 +452,9 @@
   // ========== تهيئة الصفحة ==========
   document.addEventListener('DOMContentLoaded', () => {
     initThumbnails();
-    populateWilayas();
+    populateWilayas();  // ✅ تحميل الولايات من الملف الخارجي
     document.getElementById('fcommune').disabled = true;
   });
 </script>
 </body>
-  </html>
+          </html>

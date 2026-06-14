@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C bijoux | Napperons</title>
+
+<link rel="stylesheet" href="lightbox.css">
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo"><span>C</span> bijoux</div>
+  <div class="header-badges">
+    <div class="badge-pill">🚚 توصيل 600 دج</div>
+    <div class="badge-pill">↩️ حق الرفض</div>
+  </div>
+  <button class="cart-btn" onclick="openCart()">
+    🛒 السلة
+    <span class="cart-count" id="cartCount">0</span>
+  </button>
+</header>
+
+<!-- MAIN -->
+<main>
+  <div class="product-layout">
+
+    <!-- GALLERY -->
+    <div class="gallery">
+      <div class="main-image">
+        <div class="main-image-inner" id="mainImageEl"></div>
+        <div class="new-badge">جديد</div>
+      </div>
+
+      <div class="thumbnails" id="thumbnailsContainer">
+        <div class="thumb active" data-img-url="https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/refs/heads/main/images/Lumi.jpg">
+          <img src="https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/refs/heads/main/images/Lumi.jpg" alt="نابيرون">
+        </div>
+        <div class="thumb" data-img-url="https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/refs/heads/main/images/Wrda.jpg">
+          <img src="https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/refs/heads/main/images/Wrda.jpg" alt="نابيرون وردة">
+        </div>
+        <div class="thumb" data-img-url="https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/main/images/Move.jpg">
+          <img src="https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/main/images/Move.jpg" alt="نابيرون مودرن">
+        </div>
+        <div class="thumb" data-img-url="https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/refs/heads/main/images/C%20BIJOUX.png">
+          <img src="https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/refs/heads/main/images/C%20BIJOUX.png" alt="نابيرون سي بيجو">
+        </div>
+        <div class="thumb" data-img-url="https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/refs/heads/main/images/Dor%C3%A9.jpg">
+          <img src="https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/refs/heads/main/images/Dor%C3%A9.jpg" alt="نابيرون ذهبي">
+        </div>
+        <div class="thumb" data-img-url="https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/refs/heads/main/images/Noir.jpg">
+          <img src="https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/refs/heads/main/images/Noir.jpg" alt="نابيرون أنيق">
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCT INFO -->
+    <div class="product-info">
+      <h1 class="product-name">Napperons</h1>
+      
+      <div class="product-color-desc">
+        Couche supérieure dorée<br>et une couche inférieure violette
+      </div>
+
+      <div class="price-block">
+        <div class="price"><span class="price-currency">دج </span>3500</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="selector-group">
+        <div class="selector-label">📐 اختر القطر <span class="selected-val" id="selectedSize">— diamétre</span></div>
+        <div class="size-options">
+          <button class="size-btn" onclick="selectSize(this, '25 سم')">25 سم</button>
+          <button class="size-btn" onclick="selectSize(this, '30 سم')">30 سم</button>
+          <button class="size-btn" onclick="selectSize(this, '35 سم')">35 سم</button>
+          <button class="size-btn" onclick="selectSize(this, '40 سم')">40 سم</button>
+          <button class="size-btn" onclick="selectSize(this, '50 سم')">50 سم</button>
+        </div>
+      </div>
+
+      <div class="selector-group">
+        <div class="selector-label">🔢 عدد القطع <span class="selected-val" id="selectedQty">— اختر العدد</span></div>
+        <div class="qty-options">
+          <button class="qty-btn" onclick="selectQuantity(this, 2)">2 pièces</button>
+          <button class="qty-btn" onclick="selectQuantity(this, 4)">4 pièces</button>
+          <button class="qty-btn" onclick="selectQuantity(this, 6)">6 pièces</button>
+          <button class="qty-btn" onclick="selectQuantity(this, 10)">10 pièces</button>
+          <button class="qty-btn" onclick="selectQuantity(this, 12)">12 pièces</button>
+          <button class="qty-btn" onclick="selectQuantity(this, 16)">16 pièces</button>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="cta-group">
+        <button class="btn-primary" onclick="addToCart()">🛒 أضف إلى السلة</button>
+        <button class="btn-secondary" onclick="scrollToForm()">📋 اطلب الآن مباشرة</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="guarantees">
+    <div class="guarantee-item">
+      <span class="icon"><i class="fas fa-truck-fast"></i></span>
+      <p>توصيل سريع<br>600 دج</p>
+    </div>
+    <div class="guarantee-item">
+      <span class="icon"><i class="fas fa-hand-holding-usd"></i></span>
+      <p>دفع عند<br>الاستلام</p>
+    </div>
+    <div class="guarantee-item">
+      <span class="icon"><i class="fas fa-exchange-alt"></i></span>
+      <p>حق رفض<br>المنتج</p>
+    </div>
+  </div>
+
+  <!-- ORDER FORM -->
+  <div class="form-section" id="orderForm">
+    <h2>استمارة الطلب</h2>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <input type="text" id="fname" placeholder="الاسم الكامل *">
+      </div>
+      <div class="form-group">
+        <input type="tel" id="fphone" placeholder="رقم الهاتف *">
+      </div>
+      <div class="form-group">
+        <select id="fwilaya" onchange="updateCommunes()">
+          <option value="">— اختر الولاية *</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <select id="fcommune">
+          <option value="">— اختر البلدية *</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <input type="text" id="faddress" placeholder="العنوان الكامل * (الشارع، الحي، رقم المبنى...)">
+      </div>
+    </div>
+
+    <button class="submit-order" id="submitOrderBtn" onclick="submitOrder()">✅ تأكيد الطلب</button>
+  </div>
+</main>
+
+<!-- CART PANEL -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-header">
+    <h3>🛒 السلة</h3>
+    <button class="close-btn" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <div class="cart-empty">
+      <span class="icon">🛍️</span>
+      <p>السلة فارغة<br>أضف نابيرون لتبدأ الطلب</p>
+    </div>
+  </div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-summary-row"><span>المجموع الفرعي</span><span id="subtotal">0 دج</span></div>
+    <div class="cart-summary-row"><span>التوصيل</span><span class="gold">600 دج</span></div>
+    <div class="cart-summary-row total"><span>المجموع الكلي</span><span id="totalPrice" class="gold">0 دج</span></div>
+    <button class="checkout-btn" onclick="scrollToFormFromCart()">تأكيد الطلب →</button>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal">
+    <span class="check">✅</span>
+    <h3>تم استلام طلبك!</h3>
+    <p>شكراً لثقتك في <strong>C bijoux</strong>.<br>سنتواصل معك خلال 24 ساعة لتأكيد طلب النابيرون والتوصيل.</p>
+    <button class="modal-close" onclick="closeModal()">حسناً، شكراً!</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✨ تمت إضافة النابيرون إلى السلة!</div>
+
+<!-- تحميل الملفات الخارجية -->
+<script src="data-wilaya.js"></script>
+<!-- إذا لم تكن بحاجة إلى lightbox.js أو panier.js يمكنك إزالتهما، لكن أتركهما الآن -->
+<script src="lightbox.js"></script>
+<script src="panier.js"></script>
+
+<script>
+  // ========== دالة ملء قائمة الولايات من الملف الخارجي ==========
+  function populateWilayas() {
+    const wilayaSelect = document.getElementById('fwilaya');
+    if (typeof wilayaCommunes === 'undefined') {
+      console.error('❌ ملف data-wilaya.js غير محمل! تأكد من وجوده في نفس المجلد.');
+      return;
+    }
+    
+    wilayaSelect.innerHTML = '<option value="">— اختر الولاية *</option>';
+    
+    const sortedWilayas = Object.keys(wilayaCommunes).sort((a, b) => {
+      const numA = parseInt(a.split(' - ')[0]);
+      const numB = parseInt(b.split(' - ')[0]);
+      return numA - numB;
+    });
+    
+    sortedWilayas.forEach(wilayaCode => {
+      const option = document.createElement('option');
+      option.value = wilayaCode;
+      option.textContent = wilayaCode;
+      wilayaSelect.appendChild(option);
+    });
+  }
+
+  // ========== دالة تحديث البلديات ==========
+  window.updateCommunes = function() {
+    const wilayaSelect = document.getElementById('fwilaya');
+    const communeSelect = document.getElementById('fcommune');
+    const selectedWilaya = wilayaSelect.value;
+    
+    communeSelect.innerHTML = '<option value="">— اختر البلدية *</option>';
+    
+    if (selectedWilaya && wilayaCommunes && wilayaCommunes[selectedWilaya]) {
+      const communes = wilayaCommunes[selectedWilaya];
+      communes.forEach(commune => {
+        const option = document.createElement('option');
+        option.value = commune;
+        option.textContent = commune;
+        communeSelect.appendChild(option);
+      });
+      communeSelect.disabled = false;
+    } else {
+      communeSelect.disabled = true;
+    }
+  };
+
+  // ========== متغيرات عامة ==========
+  let cart = [];
+  let selectedSize = null;
+  let selectedQty = null;
+  let currentImageUrl = null;
+
+  const PRODUCT_NAME = "طقم نابيرون فاخر";
+  const PRODUCT_PRICE = 3500;
+
+  // ========== دوال معرض الصور ==========
+  function setMainImage(imgUrl) {
+    currentImageUrl = imgUrl;
+    document.getElementById('mainImageEl').innerHTML = `<img src="${imgUrl}" style="width:100%; height:100%; object-fit:cover;">`;
+  }
+
+  function initThumbnails() {
+    const thumbs = document.querySelectorAll('.thumb');
+    if(thumbs.length) {
+      currentImageUrl = thumbs[0].querySelector('img').src;
+      setMainImage(currentImageUrl);
+    }
+    thumbs.forEach(thumb => thumb.addEventListener('click', function() {
+      thumbs.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      currentImageUrl = this.querySelector('img').src;
+      setMainImage(currentImageUrl);
+    }));
+  }
+
+  // ========== دوال اختيار المقاس والكمية ==========
+  window.selectSize = function(el, val) {
+    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    selectedSize = val;
+    document.getElementById('selectedSize').textContent = val;
+  };
+
+  window.selectQuantity = function(el, qtyValue) {
+    document.querySelectorAll('.qty-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    selectedQty = qtyValue;
+    document.getElementById('selectedQty').textContent = qtyValue + ' pièces';
+  };
+
+  function resetSelections() {
+    selectedSize = null;
+    selectedQty = null;
+    document.getElementById('selectedSize').textContent = '— diamétre';
+    document.getElementById('selectedQty').textContent = '— اختر العدد';
+    document.querySelectorAll('.size-btn, .qty-btn').forEach(btn => {
+      btn.classList.remove('active');
+    });
+  }
+
+  // ========== دوال السلة ==========
+  window.addToCart = function() {
+    if(!selectedSize) return showToast('⚠️ اختر القطر');
+    if(!selectedQty) return showToast('⚠️ اختر عدد القطع');
+    if(!currentImageUrl) return showToast('⚠️ حدث خطأ في الصورة');
+    
+    cart.push({
+      id: Date.now(), 
+      name: PRODUCT_NAME, 
+      size: selectedSize, 
+      qty: selectedQty, 
+      price: PRODUCT_PRICE,
+      image: currentImageUrl
+    });
+    updateCartUI();
+    showToast(`✨ تمت إضافة ${selectedQty} قطعة إلى السلة`);
+    resetSelections();
+  };
+
+  function updateCartUI() {
+    const count = cart.reduce((s,i) => s + i.qty, 0);
+    document.getElementById('cartCount').textContent = count;
+    const body = document.getElementById('cartBody');
+    const footer = document.getElementById('cartFooter');
+    if(!cart.length) {
+      body.innerHTML = `<div class="cart-empty"><span class="icon">🛍️</span><p>السلة فارغة<br>أضف نابيرون لتبدأ الطلب</p></div>`;
+      footer.style.display = 'none';
+      return;
+    }
+    body.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <img class="cart-item-image" src="${item.image}" alt="${item.name}">
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-details">${item.size} | ${item.qty} قطعة</div>
+          <div class="cart-item-price">${(item.price * item.qty)} دج</div>
+        </div>
+        <button onclick="removeItem(${item.id})"><i class="fas fa-trash-alt"></i></button>
+      </div>
+    `).join('');
+    const subtotal = cart.reduce((s,i) => s + i.price * i.qty, 0);
+    document.getElementById('subtotal').textContent = subtotal + ' دج';
+    document.getElementById('totalPrice').textContent = (subtotal + 600) + ' دج';
+    footer.style.display = 'block';
+  }
+
+  window.removeItem = function(id) { 
+    cart = cart.filter(i => i.id !== id); 
+    updateCartUI(); 
+    showToast('🗑️ تم إزالة المنتج من السلة');
+  };
+  
+  window.openCart = function() { 
+    document.getElementById('cartOverlay').classList.add('open'); 
+    document.getElementById('cartPanel').classList.add('open'); 
+  };
+  
+  window.closeCart = function() { 
+    document.getElementById('cartOverlay').classList.remove('open'); 
+    document.getElementById('cartPanel').classList.remove('open'); 
+  };
+  
+  window.scrollToForm = function() { 
+    document.getElementById('orderForm').scrollIntoView({ behavior: 'smooth' }); 
+  };
+  
+  window.scrollToFormFromCart = function() { 
+    closeCart(); 
+    setTimeout(scrollToForm, 350); 
+  };
+  
+  // ========== دالة تأكيد الطلب (تم إصلاحها) ==========
+  window.submitOrder = function() {
+    const name = document.getElementById('fname').value.trim();
+    const phone = document.getElementById('fphone').value.trim();
+    const wilaya = document.getElementById('fwilaya').value;
+    const commune = document.getElementById('fcommune').value;
+    const address = document.getElementById('faddress').value.trim();
+    const submitBtn = document.getElementById('submitOrderBtn');
+    
+    if(!name) return showToast('⚠️ الرجاء إدخال الاسم الكامل');
+    if(!phone) return showToast('⚠️ الرجاء إدخال رقم الهاتف');
+    if(!wilaya) return showToast('⚠️ الرجاء اختيار الولاية');
+    if(!commune) return showToast('⚠️ الرجاء اختيار البلدية');
+    if(!address) return showToast('⚠️ الرجاء إدخال العنوان الكامل');
+    
+    const phoneRegex = /^(05|06|07)[0-9]{8}$/;
+    if(!phoneRegex.test(phone)) {
+      showToast('⚠️ رقم الهاتف غير صحيح (يجب أن يبدأ بـ 05/06/07 ويتكون من 10 أرقام)');
+      return;
+    }
+    
+    const nameRegex = /^[a-zA-Z\u0621-\u064A\s]+$/;
+    if(!nameRegex.test(name)) {
+      showToast('⚠️ يرجى إدخال اسم صحيح (حروف فقط بدون رموز أو أرقام)');
+      return;
+    }
+    
+    if(cart.length === 0) {
+      showToast('⚠️ السلة فارغة، أضف منتجات أولاً');
+      return;
+    }
+    
+    submitBtn.disabled = true;
+    submitBtn.innerText = 'جاري الإرسال...';
+    
+    const orderData = {
+      name: name,
+      phone: phone,
+      wilaya: wilaya,
+      commune: commune,
+      address: address,
+      cart: cart,
+      orderId: 'ORD-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+      orderDate: new Date().toISOString()
+    };
+    
+    // ⚠️ استبدل الرابط أدناه برابط تطبيق Google Apps Script الحقيقي الخاص بك
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzEvcx2yFa1MEYVjpSk9VARu9TOAuNILwAFF09jC4-ivGx3U4sL0RGxhJqWD0DkDdK5HQ/exec';
+    
+    // ✅ تم إصلاح وضع CORS
+    fetch(scriptURL, {
+      method: 'POST',
+      mode: 'cors',                       // تم التغيير من 'no-cors' إلى 'cors'
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(orderData)
+    })
+    .then(response => response.json())    // ننتظر استجابة JSON حقيقية
+    .then(data => {
+      if (data && data.success) {
+        document.getElementById('successModal').classList.add('open');
+        cart = []; 
+        updateCartUI();
+        document.getElementById('fname').value = '';
+        document.getElementById('fphone').value = '';
+        document.getElementById('fwilaya').value = '';
+        document.getElementById('fcommune').innerHTML = '<option value="">— اختر البلدية *</option>';
+        document.getElementById('fcommune').disabled = true;
+        document.getElementById('faddress').value = '';
+        resetSelections();
+      } else {
+        showToast('❌ حدث خطأ في معالجة الطلب. الرجاء المحاولة مرة أخرى.');
+      }
+      submitBtn.disabled = false;
+      submitBtn.innerText = '✅ تأكيد الطلب';
+    })
+    .catch(() => {
+      showToast('❌ فشل الإرسال، تأكد من اتصالك وحاول مرة أخرى');
+      submitBtn.disabled = false;
+      submitBtn.innerText = '✅ تأكيد الطلب';
+    });
+  };
+  
+  window.closeModal = function() { 
+    document.getElementById('successModal').classList.remove('open'); 
+  };
+  
+  function showToast(msg) { 
+    const t = document.getElementById('toast'); 
+    t.textContent = msg; 
+    t.classList.add('show'); 
+    setTimeout(() => t.classList.remove('show'), 2800); 
+  }
+  
+  // ========== تهيئة الصفحة ==========
+  document.addEventListener('DOMContentLoaded', () => {
+    initThumbnails();
+    populateWilayas();
+    document.getElementById('fcommune').disabled = true;
+  });
+</script>
+</body>
+</html>

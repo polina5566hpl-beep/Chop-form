@@ -7,8 +7,41 @@
 
 <link rel="stylesheet" href="lightbox.css">
 <link rel="stylesheet" href="style.css">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+  /* جعل السعر أكثر وضوحاً */
+  .price-placeholder { 
+    color: #888; 
+    font-style: italic; 
+    margin: 10px 0; 
+    font-size: 1.2rem; 
+  }
+  .price-block .price { 
+    font-size: 2.8rem; 
+    font-weight: 800; 
+    color: #1a1a1a;
+    font-family: 'Tajawal', sans-serif;
+    margin: 10px 0;
+  }
+  .price-currency {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-left: 6px;
+    color: #2d2d2d;
+  }
+  #priceValue {
+    letter-spacing: 1px;
+  }
+  .price-block {
+    background: #f9f9f9;
+    padding: 10px 15px;
+    border-radius: 8px;
+    display: inline-block;
+    min-width: 180px;
+    text-align: center;
+  }
+</style>
 </head>
 <body>
 
@@ -66,8 +99,12 @@
         Couche supérieure dorée<br>et une couche inférieure violette
       </div>
 
-      <div class="price-block">
-        <div class="price"><span class="price-currency">دج </span>3500</div>
+      <!-- قسم السعر (يظهر فقط بعد اختيار المقاس والعدد) -->
+      <div class="price-block" id="priceBlock">
+        <div class="price" id="priceDisplay" style="display:none;">
+          <span class="price-currency">دج</span><span id="priceValue"></span>
+        </div>
+        <div class="price-placeholder" id="pricePlaceholder">اختر المقاس والعدد لرؤية السعر</div>
       </div>
 
       <div class="divider"></div>
@@ -192,15 +229,12 @@
   // ========== دالة ملء قائمة الولايات من الملف الخارجي ==========
   function populateWilayas() {
     const wilayaSelect = document.getElementById('fwilaya');
-    // التحقق من وجود البيانات
     if (typeof wilayaCommunes === 'undefined') {
       console.error('❌ ملف data-wilaya.js غير محمل! تأكد من وجوده في نفس المجلد.');
       return;
     }
     
     wilayaSelect.innerHTML = '<option value="">— اختر الولاية *</option>';
-    
-    // ترتيب الولايات حسب الرقم
     const sortedWilayas = Object.keys(wilayaCommunes).sort((a, b) => {
       const numA = parseInt(a.split(' - ')[0]);
       const numB = parseInt(b.split(' - ')[0]);
@@ -222,7 +256,6 @@
     const selectedWilaya = wilayaSelect.value;
     
     communeSelect.innerHTML = '<option value="">— اختر البلدية *</option>';
-    
     if (selectedWilaya && wilayaCommunes && wilayaCommunes[selectedWilaya]) {
       const communes = wilayaCommunes[selectedWilaya];
       communes.forEach(commune => {
@@ -242,9 +275,36 @@
   let selectedSize = null;
   let selectedQty = null;
   let currentImageUrl = null;
+  let currentPrice = null;
 
-  const PRODUCT_NAME = "طقم نابيرون فاخر";
-  const PRODUCT_PRICE = 3500;
+  const PRODUCT_NAME = "napperons dia";
+
+  // جدول الأسعار: كل مقاس وكل عدد له سعر
+  const priceTable = {
+    '25 سم': { 2: 1000, 4: 1500, 6: 2000, 10: 2600, 12: 3200, 16: 3900 },
+    '30 سم': { 2: 1400, 4: 1800, 6: 2500, 10: 2900, 12: 3600, 16: 4100 },
+    '35 سم': { 2: 1700, 4: 2100, 6: 2800, 10: 3400, 12: 3900, 16: 4500 },
+    '40 سم': { 2: 2200, 4: 2500, 6: 3200, 10: 3900, 12: 4600, 16: 5200 },
+    '50 سم': { 2: 2800, 4: 3200, 6: 3700, 10: 4800, 12: 5300, 16: 5900 }
+  };
+
+  // تحديث عرض السعر
+  function updatePrice() {
+    const priceDisplay = document.getElementById('priceDisplay');
+    const priceValue = document.getElementById('priceValue');
+    const pricePlaceholder = document.getElementById('pricePlaceholder');
+    
+    if (selectedSize && selectedQty && priceTable[selectedSize] && priceTable[selectedSize][selectedQty]) {
+      currentPrice = priceTable[selectedSize][selectedQty];
+      priceValue.textContent = currentPrice;
+      priceDisplay.style.display = 'block';
+      pricePlaceholder.style.display = 'none';
+    } else {
+      currentPrice = null;
+      priceDisplay.style.display = 'none';
+      pricePlaceholder.style.display = 'block';
+    }
+  }
 
   // ========== دوال معرض الصور ==========
   function setMainImage(imgUrl) {
@@ -272,6 +332,7 @@
     el.classList.add('active');
     selectedSize = val;
     document.getElementById('selectedSize').textContent = val;
+    updatePrice();
   };
 
   window.selectQuantity = function(el, qtyValue) {
@@ -279,22 +340,26 @@
     el.classList.add('active');
     selectedQty = qtyValue;
     document.getElementById('selectedQty').textContent = qtyValue + ' pièces';
+    updatePrice();
   };
 
   function resetSelections() {
     selectedSize = null;
     selectedQty = null;
+    currentPrice = null;
     document.getElementById('selectedSize').textContent = '— diamétre';
     document.getElementById('selectedQty').textContent = '— اختر العدد';
     document.querySelectorAll('.size-btn, .qty-btn').forEach(btn => {
       btn.classList.remove('active');
     });
+    updatePrice();
   }
 
   // ========== دوال السلة ==========
   window.addToCart = function() {
     if(!selectedSize) return showToast('⚠️ اختر القطر');
     if(!selectedQty) return showToast('⚠️ اختر عدد القطع');
+    if(!currentPrice) return showToast('⚠️ لم يتم تحديد السعر بعد');
     if(!currentImageUrl) return showToast('⚠️ حدث خطأ في الصورة');
     
     cart.push({
@@ -302,7 +367,7 @@
       name: PRODUCT_NAME, 
       size: selectedSize, 
       qty: selectedQty, 
-      price: PRODUCT_PRICE,
+      price: currentPrice,
       image: currentImageUrl
     });
     updateCartUI();
@@ -326,12 +391,12 @@
         <div class="cart-item-info">
           <div class="cart-item-name">${item.name}</div>
           <div class="cart-item-details">${item.size} | ${item.qty} قطعة</div>
-          <div class="cart-item-price">${(item.price * item.qty)} دج</div>
+          <div class="cart-item-price">${item.price} دج</div>
         </div>
         <button onclick="removeItem(${item.id})"><i class="fas fa-trash-alt"></i></button>
       </div>
     `).join('');
-    const subtotal = cart.reduce((s,i) => s + i.price * i.qty, 0);
+    const subtotal = cart.reduce((s,i) => s + i.price, 0);
     document.getElementById('subtotal').textContent = subtotal + ' دج';
     document.getElementById('totalPrice').textContent = (subtotal + 600) + ' دج';
     footer.style.display = 'block';
@@ -452,9 +517,10 @@
   // ========== تهيئة الصفحة ==========
   document.addEventListener('DOMContentLoaded', () => {
     initThumbnails();
-    populateWilayas();  // ✅ تحميل الولايات من الملف الخارجي
+    populateWilayas();
     document.getElementById('fcommune').disabled = true;
+    updatePrice();
   });
 </script>
 </body>
-  </html>
+            </html>

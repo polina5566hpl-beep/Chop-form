@@ -317,7 +317,7 @@ function validatePhoneNumber(phone) {
 // ===== إرسال الطلب إلى Google Script (بدون حفظ محلي) =====
 async function sendToGoogleScript(orderData) {
     try {
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbzXZsXQ31k8EwFssU0AjbS7z22cr5309mDUZPjEN730PSDswNAftN6OXHngk8gPmmnJaQ/exec';
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycby0_6gI-5T2TXGJmGwBiJ_WpVx__RLF6OnuA34zYStT0uwFxhOTRSgAd0eD9Bx-CFJxQw/exec';
         
         // إظهار رسالة "جاري الإرسال..."
         showOrderAlert('📡 جاري إرسال الطلب إلى الخادم...', 'info');
@@ -580,4 +580,4 @@ if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initOrderForm);
 } else {
     initOrderForm();
-}
+        }

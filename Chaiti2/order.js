@@ -317,7 +317,7 @@ function validatePhoneNumber(phone) {
 // ===== إرسال الطلب إلى Google Script (بدون حفظ محلي) =====
 async function sendToGoogleScript(orderData) {
     try {
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbxmPj0PcHy-rmBHkJnXkeNwgrKs8bH8gPevS_FYOSlQmVjXLWbsq5U3smraMYfIWIeRwA/exec';
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbxaT4mhHCqH6areDWMNwGB8nOHwNMqEwYqkbwpwY_btj6IVEYWVQYvH7MBL5FfY84t8vQ/exec';
         
         // إظهار رسالة "جاري الإرسال..."
         showOrderAlert('📡 جاري إرسال الطلب إلى الخادم...', 'info');

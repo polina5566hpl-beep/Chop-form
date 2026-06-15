@@ -104,7 +104,7 @@
         <div class="price" id="priceDisplay" style="display:none;">
           <span class="price-currency">دج</span><span id="priceValue"></span>
         </div>
-        <div class="price-placeholder" id="pricePlaceholder">اختر المقاس والعدد لرؤية السعر</div>
+        <div class="price-placeholder" id="pricePlaceholder">اختر القطر والعدد لرؤية السعر</div>
       </div>
 
       <div class="divider"></div>
@@ -371,7 +371,7 @@
       image: currentImageUrl
     });
     updateCartUI();
-    showToast(`✨ تمت إضافة ${selectedQty} قطعة إلى السلة`);
+    showToast(`✨ تمت إضافة ${selectedQty} قطع إلى السلة`);
     resetSelections();
   };
 
@@ -390,7 +390,7 @@
         <img class="cart-item-image" src="${item.image}" alt="${item.name}">
         <div class="cart-item-info">
           <div class="cart-item-name">${item.name}</div>
-          <div class="cart-item-details">${item.size} | ${item.qty} قطعة</div>
+          <div class="cart-item-details">${item.size} | ${item.qty} قطع</div>
           <div class="cart-item-price">${item.price} دج</div>
         </div>
         <button onclick="removeItem(${item.id})"><i class="fas fa-trash-alt"></i></button>
@@ -473,7 +473,7 @@
       orderDate: new Date().toISOString()
     };
     
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyQL2ylCALKCxIr8G9WmX_x0SYzq0lFXHZ82ANvJlx7ZRrjjGHRhMDRib1RViCne8MWBQ/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwurKSq5T_9W5PS707IDZbwdM4MYrjchTVvzT0U_EFgpAvfsgOgrCpp8N9skh30HbFYPQ/exec';
     
     fetch(scriptURL, {
       method: 'POST',

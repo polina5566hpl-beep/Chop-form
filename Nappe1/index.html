@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="lightbox.css">
   
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Cairo:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     :root {
       --gold:       #C9A84C;
@@ -287,9 +288,34 @@
     .field-group label {
       font-size: 12px; font-weight: 600;
       color: var(--text-soft); letter-spacing: .5px;
+      display: flex; align-items: center; gap: 5px;
     }
+
+    /* ── INPUT WITH ICON ── */
+    .input-icon-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .input-icon {
+      position: absolute;
+      right: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.65;
+      transition: opacity .2s;
+    }
+    /* For select: arrow is on the left, icon on the right */
+    .input-icon-wrap select ~ .input-icon {
+      right: 13px;
+    }
+
     .field-group input, .field-group select {
-      padding: 12px 14px;
+      width: 100%;
+      padding: 12px 42px 12px 14px;
       border: 1.5px solid #DDD2F0;
       border-radius: 10px;
       font-family: 'Cairo', sans-serif;
@@ -306,7 +332,6 @@
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234A2C6E' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: left 14px center;
-      padding-right: 14px;
       padding-left: 36px;
     }
     .field-group input:focus, .field-group select:focus {
@@ -347,6 +372,12 @@
       transform: none;
     }
 
+/* تحول الأيقونة إلى الذهبي عند التركيز على الحقل المجاور مباشرة */
+.field-group input:focus + .field-icon,
+.field-group select:focus + .field-icon {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light)); /* خلفية ذهبية متدرجة */
+  color: var(--violet-deep);            /* أيقونة بلون بنفسجي غامق */
+}
     /* ── TRUST ── */
     .trust-bar {
       display: grid;
@@ -359,11 +390,11 @@
       background: linear-gradient(145deg, var(--gold-pale), var(--white));
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 18px 14px;
+      padding: 4px 0px;
       text-align: center;
     }
     .trust-icon {
-      font-size: 28px; margin-bottom: 8px;
+      font-size: 25px; margin-bottom: 8px;
       display: block;
     }
     .trust-name {
@@ -417,6 +448,37 @@
       cursor: pointer;
     }
 
+    /* ── INPUT WITH ICON ── */
+    .input-icon-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .input-icon-wrap input,
+    .input-icon-wrap select {
+      width: 100%;
+    }
+    .field-icon {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--violet-deep), var(--violet));
+      border-radius: 0 10px 10px 0;
+      color: var(--gold-light);
+      font-size: 15px;
+      pointer-events: none;
+      flex-shrink: 0;
+    }
+    .field-group input,
+    .field-group select {
+      padding-right: 52px !important;
+    }
+
     /* ── FOOTER ── */
     footer {
       background: var(--violet-deep);
@@ -428,6 +490,7 @@
       font-size: 12px; color: rgba(255,255,255,.4);
       letter-spacing: 1px;
     }
+    
   </style>
 </head>
 <body>
@@ -512,30 +575,51 @@
     <h3 class="form-title">📋 استمارة الطلب</h3>
     <p class="form-subtitle">أدخل بياناتك وسنتصل بك لتأكيد الطلب</p>
     <div class="form-grid">
+
       <div class="field-group">
         <label>الاسم الكامل *</label>
-        <input type="text" id="fname" placeholder="مثال: محمد بن علي">
+        <div class="input-icon-wrap">
+          <input type="text" id="fname" placeholder="مثال: محمد بن علي">
+          <span class="field-icon"><i class="fa-solid fa-user"></i></span>
+        </div>
       </div>
+
       <div class="field-group">
         <label>رقم الهاتف *</label>
-        <input type="tel" id="fphone" placeholder="05XXXXXXXX" dir="rtl" style="text-align: right;">
+        <div class="input-icon-wrap">
+          <input type="tel" id="fphone" placeholder="05XXXXXXXX" dir="rtl" style="text-align: right;">
+          <span class="field-icon"><i class="fa-solid fa-phone"></i></span>
+        </div>
       </div>
+
       <div class="field-group">
         <label>الولاية *</label>
-        <select id="fwilaya" onchange="updateBaladiya()">
-          <option value="">-- اختر الولاية --</option>
-        </select>
+        <div class="input-icon-wrap">
+          <select id="fwilaya" onchange="updateBaladiya()">
+            <option value="">الولاية</option>
+          </select>
+          <span class="field-icon"><i class="fa-solid fa-signs-post"></i></span>
+        </div>
       </div>
+
       <div class="field-group">
         <label>البلدية *</label>
-        <select id="fbaladiya">
-          <option value="">-- اختر البلدية --</option>
-        </select>
+        <div class="input-icon-wrap">
+          <select id="fbaladiya">
+            <option value="">البلدية</option>
+          </select>
+          <span class="field-icon"><i class="fa-solid fa-building"></i></span>
+        </div>
       </div>
+
       <div class="field-group form-full">
         <label>العنوان الكامل *</label>
-        <input type="text" id="faddress" placeholder="الشارع، الحي، الرقم...">
+        <div class="input-icon-wrap">
+          <input type="text" id="faddress" placeholder="الشارع، الحي، الرقم...">
+          <span class="field-icon"><i class="fa-solid fa-location-dot"></i></span>
+        </div>
       </div>
+
     </div>
     <button class="submit-btn" id="submitBtn" onclick="submitOrder()">🛒 تأكيد الطلب الآن</button>
   </div>
@@ -562,10 +646,8 @@
 
 <script src="lightbox.js"></script>
 <script>
-  // ⚙️ استبدل هذا الرابط برابط Google Apps Script الخاص بك
   const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz16DpW41nGEfLtNEHaLzg6tSNY65uB0u7egbRXWjdpvivzLzdu1ipksMpSprhaAd77FQ/exec';
 
-  // بيانات الولايات والبلديات
   const algeriaData = {
     "23 - عنابة": ["عنابة", "أولاد خالد", "برحال", "بونعيم", "بوعمار", "الحجار", "الزرزار", "الشرفة", "الشطايبي", "سرايدي", "سيدي عمار", "عين الباردة", "تريعات", "وادي العنب"],
     "16 - الجزائر العاصمة": ["الجزائر الوسطى", "باب الوادي", "القصبة", "المرادية", "الأبيار", "حسين داي", "الكاليتوس", "بئر مراد رايس", "الدرارية", "بئر توتة", "اولاد فايت", "الشراقة", "زرالدة"],
@@ -580,7 +662,7 @@
 
   function populateWilayas() {
     const wilayaSelect = document.getElementById('fwilaya');
-    wilayaSelect.innerHTML = '<option value="">-- اختر الولاية --</option>';
+    wilayaSelect.innerHTML = '<option value="">الولاية</option>';
     for (let wilayaName in algeriaData) {
       const option = document.createElement('option');
       option.value = wilayaName;
@@ -593,7 +675,7 @@
     const wilayaSelect = document.getElementById('fwilaya');
     const baladiyaSelect = document.getElementById('fbaladiya');
     const selectedWilaya = wilayaSelect.value;
-    baladiyaSelect.innerHTML = '<option value="">-- اختر البلدية --</option>';
+    baladiyaSelect.innerHTML = '<option value="">البلدية</option>';
     if (selectedWilaya && algeriaData[selectedWilaya]) {
       algeriaData[selectedWilaya].forEach(baladiya => {
         const option = document.createElement('option');
@@ -653,46 +735,20 @@
     const address = document.getElementById('faddress').value.trim();
     const submitBtn = document.getElementById('submitBtn');
 
-    if (!selectedQty) {
-      showError('⚠️ الرجاء اختيار الكمية أولاً');
-      return;
-    }
-
-    if (!name) {
-      showError('⚠️ الرجاء إدخال الاسم الكامل');
-      return;
-    }
-    if (!isValidName(name)) {
-      showError('⚠️ يرجى إدخال اسم صحيح (حروف فقط بدون رموز أو أرقام)');
-      return;
-    }
-
-    if (!phone) {
-      showError('⚠️ الرجاء إدخال رقم الهاتف');
-      return;
-    }
-    if (!isValidPhone(phone)) {
-      showError('⚠️ رقم الهاتف غير صحيح (يجب أن يبدأ بـ 05 أو 06 أو 07 ويتكون من 10 أرقام)');
-      return;
-    }
-
-    if (!wilaya || !baladiya || !address) {
-      showError('⚠️ يرجى ملء جميع الحقول المطلوبة (الولاية، البلدية، العنوان)');
-      return;
-    }
+    if (!selectedQty) { showError('⚠️ الرجاء اختيار الكمية أولاً'); return; }
+    if (!name) { showError('⚠️ الرجاء إدخال الاسم الكامل'); return; }
+    if (!isValidName(name)) { showError('⚠️ يرجى إدخال اسم صحيح (حروف فقط بدون رموز أو أرقام)'); return; }
+    if (!phone) { showError('⚠️ الرجاء إدخال رقم الهاتف'); return; }
+    if (!isValidPhone(phone)) { showError('⚠️ رقم الهاتف غير صحيح (يجب أن يبدأ بـ 05 أو 06 أو 07 ويتكون من 10 أرقام)'); return; }
+    if (!wilaya || !baladiya || !address) { showError('⚠️ يرجى ملء جميع الحقول المطلوبة (الولاية، البلدية، العنوان)'); return; }
 
     submitBtn.disabled = true;
     const originalText = submitBtn.innerText;
     submitBtn.innerText = "جاري الإرسال...";
 
-    // 📤 تجهيز البيانات للإرسال إلى Google Sheets
     const totalPrice = selectedPrice + DELIVERY;
     const orderData = {
-      name: name,
-      phone: phone,
-      wilaya: wilaya,
-      baladiya: baladiya,
-      address: address,
+      name, phone, wilaya, baladiya, address,
       quantity: selectedQty,
       price: selectedPrice,
       delivery: DELIVERY,
@@ -701,33 +757,26 @@
       date: new Date().toLocaleString('ar-DZ')
     };
 
-    // 🚀 إرسال إلى Google Apps Script
     fetch(GOOGLE_SCRIPT_URL, {
       method: 'POST',
-      mode: 'no-cors', // مهم لتجنب مشاكل CORS
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(orderData)
     })
     .then(() => {
-      // ✅ نجاح الإرسال (مع no-cors لن نستطيع قراءة الـ response لكن الإرسال يتم)
       document.getElementById('modalMsg').innerHTML =
         `<strong>${name}</strong><br>
          ${selectedQty} قطعة · ${selectedPrice.toLocaleString('fr-DZ')} دج + 600 دج توصيل<br>
          ولاية ${wilaya}، ${baladiya}<br>
          سيتصل بك فريقنا على <strong>${phone}</strong> لتأكيد الطلب قريباً.`;
       document.getElementById('modalOverlay').classList.add('show');
-      
-      // إعادة تعيين النموذج
       document.getElementById('fname').value = '';
       document.getElementById('fphone').value = '';
       document.getElementById('fwilaya').value = '';
       document.getElementById('fbaladiya').innerHTML = '<option value="">-- اختر البلدية --</option>';
       document.getElementById('faddress').value = '';
       document.querySelectorAll('.qty-btn').forEach(b => b.classList.remove('selected'));
-      selectedQty = null;
-      selectedPrice = 0;
+      selectedQty = null; selectedPrice = 0;
       document.getElementById('cartQty').textContent = '—';
       document.getElementById('cartPrice').textContent = '—';
       document.getElementById('cartTotal').textContent = '—';
@@ -748,19 +797,14 @@
 
   window.addEventListener('DOMContentLoaded', () => {
     populateWilayas();
-  
     document.getElementById('fwilaya').addEventListener('change', updateBaladiya);
-    
     const formInputs = document.querySelectorAll('.form-section input, .form-section select');
     formInputs.forEach(input => {
       input.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          submitOrder();
-        }
+        if (e.key === 'Enter') { e.preventDefault(); submitOrder(); }
       });
     });
   });
 </script>
 </body>
-  </html>
+</html>

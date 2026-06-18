@@ -41,6 +41,40 @@
     min-width: 180px;
     text-align: center;
   }
+
+  /* أيقونات داخل حقول الاستمارة */
+  .input-icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .input-icon-wrapper .field-icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #c9a84c;
+    border-radius: 0 8px 8px 0;
+    color: #fff;
+    font-size: 1rem;
+    pointer-events: none;
+    flex-shrink: 0;
+  }
+
+  .input-icon-wrapper input,
+  .input-icon-wrapper select {
+    padding-right: 54px !important;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  #fcommune:disabled {
+  opacity: 1;
+}
 </style>
 </head>
 <body>
@@ -76,8 +110,8 @@
         <div class="thumb" data-img-url="https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/refs/heads/main/images/Wrda.jpg">
           <img src="https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/refs/heads/main/images/Wrda.jpg" alt="نابيرون وردة">
         </div>
-        <div class="thumb" data-img-url="https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/main/images/Move.jpg">
-          <img src="https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/main/images/Move.jpg" alt="نابيرون مودرن">
+        <div class="thumb" data-img-url="https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/refs/heads/main/images/Move.jpg">
+          <img src="https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/refs/heads/main/images/Move.jpg" alt="نابيرون مودرن">
         </div>
         <div class="thumb" data-img-url="https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/refs/heads/main/images/C%20BIJOUX.png">
           <img src="https://raw.githubusercontent.com/polina5566hpl-beep/Chop-form/refs/heads/main/images/C%20BIJOUX.png" alt="نابيرون سي بيجو">
@@ -161,25 +195,51 @@
     <h2>استمارة الطلب</h2>
 
     <div class="form-grid">
+
+      <!-- الاسم الكامل -->
       <div class="form-group">
-        <input type="text" id="fname" placeholder="الاسم الكامل *">
+        <div class="input-icon-wrapper">
+          <span class="field-icon"><i class="fa-solid fa-user"></i></span>
+          <input type="text" id="fname" placeholder="الاسم الكامل *">
+        </div>
       </div>
+
+      <!-- رقم الهاتف -->
       <div class="form-group">
-        <input type="tel" id="fphone" placeholder="رقم الهاتف *">
+        <div class="input-icon-wrapper">
+          <span class="field-icon"><i class="fa-solid fa-phone"></i></span>
+          <input type="tel" id="fphone" placeholder="رقم الهاتف *">
+        </div>
       </div>
+
+      <!-- الولاية -->
       <div class="form-group">
-        <select id="fwilaya" onchange="updateCommunes()">
-          <option value="">— اختر الولاية *</option>
-        </select>
+        <div class="input-icon-wrapper">
+          <span class="field-icon"><i class="fa-solid fa-signs-post"></i></span>
+          <select id="fwilaya" onchange="updateCommunes()">
+            <option value="">الولاية</option>
+          </select>
+        </div>
       </div>
+
+      <!-- البلدية -->
       <div class="form-group">
-        <select id="fcommune">
-          <option value="">— اختر البلدية *</option>
-        </select>
+        <div class="input-icon-wrapper">
+          <span class="field-icon"><i class="fa-solid fa-building"></i></span>
+          <select id="fcommune">
+            <option value="">البلدية</option>
+          </select>
+        </div>
       </div>
+
+      <!-- العنوان الكامل -->
       <div class="form-group full">
-        <input type="text" id="faddress" placeholder="العنوان الكامل * (الشارع، الحي، رقم المبنى...)">
+        <div class="input-icon-wrapper">
+          <span class="field-icon"><i class="fa-solid fa-location-dot"></i></span>
+          <input type="text" id="faddress" placeholder="العنوان الكامل * (الشارع، الحي، رقم المبنى...)">
+        </div>
       </div>
+
     </div>
 
     <button class="submit-order" id="submitOrderBtn" onclick="submitOrder()">✅ تأكيد الطلب</button>
@@ -234,7 +294,7 @@
       return;
     }
     
-    wilayaSelect.innerHTML = '<option value="">— اختر الولاية *</option>';
+    wilayaSelect.innerHTML = '<option value="">الولاية</option>';
     const sortedWilayas = Object.keys(wilayaCommunes).sort((a, b) => {
       const numA = parseInt(a.split(' - ')[0]);
       const numB = parseInt(b.split(' - ')[0]);
@@ -255,7 +315,7 @@
     const communeSelect = document.getElementById('fcommune');
     const selectedWilaya = wilayaSelect.value;
     
-    communeSelect.innerHTML = '<option value="">— اختر البلدية *</option>';
+    communeSelect.innerHTML = '<option value="">البلدية</option>';
     if (selectedWilaya && wilayaCommunes && wilayaCommunes[selectedWilaya]) {
       const communes = wilayaCommunes[selectedWilaya];
       communes.forEach(commune => {
@@ -523,4 +583,4 @@
   });
 </script>
 </body>
-            </html>
+</html>

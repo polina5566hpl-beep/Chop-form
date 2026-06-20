@@ -646,7 +646,7 @@
 
 <script src="lightbox.js"></script>
 <script>
-  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzTHdEdnehNwemaY0ogZ-An-94mxTG7JxWvYEH5Y5mNuTWf_L9HUi2k1YtO2NnRWh0vwA/exec';
+  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbymF1y0qEoiTsPMgbM9bFNxyqoeMYSftHIHgfpM551edQsHkd8C2LZr8ZJCeU3hz3B_aQ/exec';
 
   const algeriaData = {
     "23 - عنابة": ["عنابة", "أولاد خالد", "برحال", "بونعيم", "بوعمار", "الحجار", "الزرزار", "الشرفة", "الشطايبي", "سرايدي", "سيدي عمار", "عين الباردة", "تريعات", "وادي العنب"],
@@ -747,15 +747,16 @@
     submitBtn.innerText = "جاري الإرسال...";
 
     const totalPrice = selectedPrice + DELIVERY;
-    const orderData = {
-      name, phone, wilaya, baladiya, address,
-      quantity: selectedQty,
-      price: selectedPrice,
-      delivery: DELIVERY,
-      total: totalPrice,
-      product: 'Napperon Violet & Doré',
-      date: new Date().toLocaleString('ar-DZ')
-    };
+const orderData = {
+    orderId: 'ORD-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+    name, phone, wilaya, baladiya, address,
+    quantity: selectedQty,
+    price: selectedPrice,
+    delivery: DELIVERY,
+    total: totalPrice,
+    product: 'Napperon Violet & Doré',
+    date: new Date().toLocaleString('ar-DZ')
+};
 
     fetch(GOOGLE_SCRIPT_URL, {
       method: 'POST',

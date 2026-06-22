@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>Napperons – Élégance Dorée</title>
+  <title>Napperons Vanity – Élégance Dorée</title>
   <link rel="stylesheet" href="lightbox.css">
   
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Cairo:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -270,11 +270,13 @@
       font-size: 22px; font-weight: 600;
       color: var(--violet-deep);
       margin-bottom: 6px;
-      display: flex; align-items: center; gap: 10px;
+      display: flex; align-items: center; justify-content: center; /* تم توسيط العنوان */
+      gap: 10px;
     }
     .form-subtitle {
       font-size: 13px; color: var(--text-soft);
       margin-bottom: 22px;
+      text-align: center; /* تم توسيط النص */
     }
     .form-grid {
       display: grid;
@@ -498,7 +500,7 @@
 <header>
   <div class="header-inner">
     <p class="brand-tag">C.bijoux</p>
-    <h1 class="brand-name">Nappe<span>ron</span></h1>
+    <h1 class="brand-name">Napperons <span>Vanity</span></h1>
     <div class="header-line"><span class="header-badge">✦ Élégance Dorée ✦</span></div>
   </div>
 </header>
@@ -541,7 +543,7 @@
     <div class="product-info">
       <div>
         <p class="product-label">Art de la Table</p>
-        <h2 class="product-title">Napperon Violet & Doré</h2>
+        <h2 class="product-title">Napperons Vanity</h2>
       </div>
       <div class="specs-list">
         <div class="spec-row"><div class="spec-dot violet"></div><span>Couche supérieure <strong>Violette</strong></span></div>
@@ -572,8 +574,7 @@
   <div class="ornament-divider"><span class="ornament-icon">✦</span></div>
 
   <div class="form-section">
-    <h3 class="form-title">📋 استمارة الطلب</h3>
-    <p class="form-subtitle">أدخل بياناتك وسنتصل بك لتأكيد الطلب</p>
+    <h3 class="form-title">استمارة الطلب</h3>
     <div class="form-grid">
 
       <div class="field-group">
@@ -632,7 +633,7 @@
 </main>
 
 <footer>
-  <p class="footer-text">✦ Napperon Élégance · Art de la Table Algérien ✦</p>
+  <p class="footer-text">✦ Napperons Vanity · Art de la Table Algérien ✦</p>
 </footer>
 
 <div class="modal-overlay" id="modalOverlay">
@@ -747,16 +748,16 @@
     submitBtn.innerText = "جاري الإرسال...";
 
     const totalPrice = selectedPrice + DELIVERY;
-const orderData = {
-    orderId: 'ORD-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
-    name, phone, wilaya, baladiya, address,
-    quantity: selectedQty,
-    price: selectedPrice,
-    delivery: DELIVERY,
-    total: totalPrice,
-    product: 'Napperon Violet & Doré',
-    date: new Date().toLocaleString('ar-DZ')
-};
+    const orderData = {
+       orderId: (() => { let d = Array.from({length:6}, () => Math.floor(Math.random()*10)); let l = Array.from({length:4}, () => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.charAt(Math.floor(Math.random()*26))); let all = [...d, ...l]; for(let i=all.length-1; i>0; i--){ let j = Math.floor(Math.random()*(i+1)); [all[i], all[j]] = [all[j], all[i]]; } return all.join(''); })(),
+       name, phone, wilaya, baladiya, address,
+       quantity: selectedQty,
+       price: selectedPrice,
+       delivery: DELIVERY,
+       total: totalPrice,
+       product: 'Napperons Vanity',
+       date: new Date().toLocaleString('ar-DZ')
+    };
 
     fetch(GOOGLE_SCRIPT_URL, {
       method: 'POST',
@@ -767,9 +768,7 @@ const orderData = {
     .then(() => {
       document.getElementById('modalMsg').innerHTML =
         `<strong>${name}</strong><br>
-         ${selectedQty} قطعة · ${selectedPrice.toLocaleString('fr-DZ')} دج + 600 دج توصيل<br>
-         ولاية ${wilaya}، ${baladiya}<br>
-         سيتصل بك فريقنا على <strong>${phone}</strong> لتأكيد الطلب قريباً.`;
+         سنتصل بك على <strong>${phone}</strong> لتأكيد الطلب`;
       document.getElementById('modalOverlay').classList.add('show');
       document.getElementById('fname').value = '';
       document.getElementById('fphone').value = '';
@@ -808,5 +807,4 @@ const orderData = {
   });
 </script>
 </body>
-</html>
-
+          </html>

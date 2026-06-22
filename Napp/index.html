@@ -198,6 +198,7 @@
 
       <!-- الاسم الكامل -->
       <div class="form-group">
+        الاسم الكامل
         <div class="input-icon-wrapper">
           <span class="field-icon"><i class="fa-solid fa-user"></i></span>
           <input type="text" id="fname" placeholder="الاسم الكامل *">
@@ -206,6 +207,7 @@
 
       <!-- رقم الهاتف -->
       <div class="form-group">
+        <label>الهاتف</label>
         <div class="input-icon-wrapper">
           <span class="field-icon"><i class="fa-solid fa-phone"></i></span>
           <input type="tel" id="fphone" placeholder="رقم الهاتف *">
@@ -214,6 +216,7 @@
 
       <!-- الولاية -->
       <div class="form-group">
+        <label>الولاية</label>
         <div class="input-icon-wrapper">
           <span class="field-icon"><i class="fa-solid fa-signs-post"></i></span>
           <select id="fwilaya" onchange="updateCommunes()">
@@ -224,6 +227,7 @@
 
       <!-- البلدية -->
       <div class="form-group">
+        <label>البلدية</label>
         <div class="input-icon-wrapper">
           <span class="field-icon"><i class="fa-solid fa-building"></i></span>
           <select id="fcommune">
@@ -234,6 +238,7 @@
 
       <!-- العنوان الكامل -->
       <div class="form-group full">
+        <label>العنوان</label>
         <div class="input-icon-wrapper">
           <span class="field-icon"><i class="fa-solid fa-location-dot"></i></span>
           <input type="text" id="faddress" placeholder="العنوان الكامل * (الشارع، الحي، رقم المبنى...)">
@@ -529,11 +534,20 @@
       commune: commune,
       address: address,
       cart: cart,
-      orderId: 'ORD-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+      orderId: (() => { 
+        let d = Array.from({length:6}, () => Math.floor(Math.random()*10)); 
+        let l = Array.from({length:4}, () => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.charAt(Math.floor(Math.random()*26))); 
+        let all = [...d, ...l]; 
+        for(let i=all.length-1; i>0; i--){ 
+          let j = Math.floor(Math.random()*(i+1)); 
+          [all[i], all[j]] = [all[j], all[i]]; 
+        } 
+        return all.join(''); 
+      })(),
       orderDate: new Date().toISOString()
     };
     
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyqUrXVNE1WJSdz5tVxTNh6kNVD2vMeQRU8s181Tct3GQ1Sh1Dflgu_ax27FCoqVSYG/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzXDnD3FdDHUNbcSKbTOcF_y-WIl38ADCi0bGGthA0HSsQnSL0tNqn0JTFNAJvUMh8v/exec';
     
     fetch(scriptURL, {
       method: 'POST',
@@ -583,4 +597,4 @@
   });
 </script>
 </body>
-</html>
+  </html>

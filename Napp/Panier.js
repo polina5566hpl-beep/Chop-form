@@ -1,31 +1,43 @@
-// دالة لفتح السلة
+const cartPanel = document.getElementById('cartPanel');
+
+// دالة الفتح
 function openCart() {
-  const cartPanel = document.getElementById('cartPanel');
   cartPanel.classList.add('open');
   
-  // إضافة حالة للسجل عند فتح السلة
-  window.history.pushState({ cartOpen: true }, "");
+  // نضيف حالة جديدة للسجل، وهذا يجعل المتصفح يظن أننا انتقلنا لصفحة جديدة
+  history.pushState({ cartOpen: true }, 'Cart');
 }
 
-// دالة لإغلاق السلة
+// دالة الإغلاق
 function closeCart() {
-  const cartPanel = document.getElementById('cartPanel');
   cartPanel.classList.remove('open');
 }
 
-// مراقبة زر الرجوع
-window.addEventListener('popstate', function(event) {
-  const cartPanel = document.getElementById('cartPanel');
-  
-  // إذا كانت السلة مفتوحة، أغلقها وامنعه من الخروج
+// مراقبة حدث الرجوع
+window.addEventListener('popstate', (event) => {
+  // إذا كانت السلة مفتوحة، نغلقها ونمنع الخروج
   if (cartPanel.classList.contains('open')) {
     closeCart();
+  } else {
+    // إذا كانت مغلقة، اترك المتصفح يقوم بعمله الطبيعي (الرجوع للصفحة السابقة)
   }
 });
 
 // ربط زر الفتح
-const cartBtn = document.querySelector('.cart-btn');
-cartBtn.addEventListener('click', (e) => {
-  e.preventDefault(); // منع أي سلوك افتراضي
+document.querySelector('.cart-btn').addEventListener('click', (e) => {
+  e.preventDefault();
   openCart();
 });
+
+// لمنع حدوث تضارب إذا قام المستخدم بإغلاق السلة يدوياً (بدون زر الرجوع)
+// يجب أن نقوم بحذف حالة السلة من الـ History لكي لا يبقى السجل "متسخاً"
+const closeBtn = document.querySelector('.close-cart-btn'); // تأكد من وضع الكلاس الصحيح لزر الإغلاق لديك
+if (closeBtn) {
+  closeBtn.addEventListener('click', () => {
+    closeCart();
+    // إذا أغلقنا السلة يدوياً، نعود خطوة للخلف في التاريخ لضبط الحالة
+    if (history.state && history.state.cartOpen) {
+      history.back();
+    }
+  });
+}

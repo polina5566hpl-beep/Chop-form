@@ -535,19 +535,48 @@ let cart = [];
 let activeLightboxImages = [];
 let currentLightboxIndex = 0;
 let touchStartX = 0, touchEndX = 0;
-let currentModalType = null; // لتذكر نوع المودال المفتوح
+let currentModalType = null;
 
+// ===== دوال السلة المحسنة =====
 function loadCartFromStorage() {
   const savedCart = localStorage.getItem('chaiti_cart');
   if (savedCart) {
-    try { cart = JSON.parse(savedCart); updateUI(); }
-    catch(e) { console.error('خطأ في تحميل السلة', e); }
+    try {
+      cart = JSON.parse(savedCart);
+      if (!Array.isArray(cart)) cart = [];
+    } catch(e) {
+      console.error('خطأ في تحميل السلة', e);
+      cart = [];
+    }
+  } else {
+    cart = [];
   }
+  updateUI();
 }
 
 function saveCartToStorage() {
   localStorage.setItem('chaiti_cart', JSON.stringify(cart));
+  updateUI();
 }
+
+// الاستماع لتغييرات localStorage من صفحة السلة
+window.addEventListener('storage', function(e) {
+  if (e.key === 'chaiti_cart') {
+    console.log('تم تحديث السلة من صفحة أخرى');
+    loadCartFromStorage();
+  }
+});
+
+// إعادة تحميل السلة عند العودة للصفحة
+document.addEventListener('visibilitychange', function() {
+  if (!document.hidden) {
+    loadCartFromStorage();
+  }
+});
+
+window.addEventListener('pageshow', function() {
+  loadCartFromStorage();
+});
 
 function renderProducts() {
   const g = document.getElementById('pgrid');
@@ -594,7 +623,6 @@ function openLightbox(pid, idx) {
   lo.classList.add("active");
   document.body.style.overflow = "hidden";
   
-  // إضافة حالة اللايت بوكس إلى التاريخ
   history.pushState({ lightbox: true, productId: pid, imageIndex: currentLightboxIndex }, '');
 }
 
@@ -607,12 +635,9 @@ function closeLightboxOnly() {
     document.body.style.overflow = "";
     activeLightboxImages = [];
     
-    // بعد إغلاق اللايت بوكس، نحدد الحالة المناسبة
     if(modal.classList.contains('show')) {
-      // إذا كان المودال مفتوح، نضيف حالته للتاريخ
       history.replaceState({ modalOpen: true, modalType: currentModalType }, '');
     } else if(menu.classList.contains('open')) {
-      // إذا كانت القائمة مفتوحة، نضيف حالتها للتاريخ
       history.replaceState({ menuOpen: true }, '');
     } else {
       history.replaceState({ main: true }, '');
@@ -648,7 +673,6 @@ function addCart(id) {
   const ex = cart.find(x=>x.id===id);
   if(ex) ex.qty++;
   else cart.push({...p, qty:1});
-  updateUI();
   saveCartToStorage();
   toast(`✓ تم إضافة "${p.name}" للسلة`);
 }
@@ -673,7 +697,6 @@ function closeMenu() {
   drawer.classList.remove('open');
   document.getElementById('menuOverlay').classList.remove('on');
   
-  // تحديث الحالة بعد إغلاق القائمة
   const modal = document.getElementById('infoModal');
   if(!modal.classList.contains('show')) {
     history.replaceState({ main: true }, '');
@@ -725,12 +748,9 @@ function closeModal() {
   const menu = document.getElementById('menuDrawer');
   modal.classList.remove('show');
   
-  // 🔑 المفتاح: بعد إغلاق المودال، نتحقق من حالة القائمة
   if(menu.classList.contains('open')) {
-    // إذا كانت القائمة مفتوحة، نستبدل الحالة بحالة القائمة
     history.replaceState({ menuOpen: true }, '');
   } else {
-    // إذا كانت القائمة مغلقة، نعود للحالة الرئيسية
     history.replaceState({ main: true }, '');
   }
   currentModalType = null;
@@ -743,25 +763,21 @@ window.addEventListener('popstate', function(e) {
   const modal = document.getElementById('infoModal');
   const menu = document.getElementById("menuDrawer");
   
-  // 1) معرض الصور مفتوح - نغلقه
   if (lo.classList.contains("active")) {
     closeLightboxOnly();
     return;
   }
   
-  // 2) المودال مفتوح - نغلقه (القائمة ستبقى مفتوحة إن كانت موجودة)
   if (modal.classList.contains('show')) {
     closeModal();
     return;
   }
   
-  // 3) القائمة مفتوحة - نغلقها
   if (menu.classList.contains("open")) {
     closeMenu();
     return;
   }
   
-  // 4) الحالة الافتراضية - نضمن أن كل شيء مغلق
   if (state && state.main) {
     if(lo.classList.contains("active")) closeLightboxOnly();
     if(modal.classList.contains('show')) closeModal();
@@ -783,7 +799,6 @@ document.querySelectorAll('.menu-link[data-action]').forEach(btn => {
     e.stopPropagation();
     const action = btn.getAttribute('data-action');
     if(action) {
-      // لا نغلق القائمة قبل فتح المودال
       showInfoModal(action);
     }
   });
@@ -818,8 +833,7 @@ setupTouchEvents();
 loadCartFromStorage();
 renderProducts();
 updateUI();
-// تعيين الحالة الأولية
 history.replaceState({ main: true }, '');
 </script>
 </body>
-</html>
+            </html>

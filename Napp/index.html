@@ -10,7 +10,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
-  /* جعل السعر أكثر وضوحاً */
   .price-placeholder { 
     color: #888; 
     font-style: italic; 
@@ -42,7 +41,6 @@
     text-align: center;
   }
 
-  /* أيقونات داخل حقول الاستمارة */
   .input-icon-wrapper {
     position: relative;
     display: flex;
@@ -73,8 +71,8 @@
     box-sizing: border-box;
   }
   #fcommune:disabled {
-  opacity: 1;
-}
+    opacity: 1;
+  }
 </style>
 </head>
 <body>
@@ -133,7 +131,6 @@
         Couche supérieure dorée<br>et une couche inférieure violette
       </div>
 
-      <!-- قسم السعر (يظهر فقط بعد اختيار المقاس والعدد) -->
       <div class="price-block" id="priceBlock">
         <div class="price" id="priceDisplay" style="display:none;">
           <span class="price-currency">دج</span><span id="priceValue"></span>
@@ -196,7 +193,6 @@
 
     <div class="form-grid">
 
-      <!-- الاسم الكامل -->
       <div class="form-group">
         الاسم الكامل
         <div class="input-icon-wrapper">
@@ -205,7 +201,6 @@
         </div>
       </div>
 
-      <!-- رقم الهاتف -->
       <div class="form-group">
         <label>الهاتف</label>
         <div class="input-icon-wrapper">
@@ -214,7 +209,6 @@
         </div>
       </div>
 
-      <!-- الولاية -->
       <div class="form-group">
         <label>الولاية</label>
         <div class="input-icon-wrapper">
@@ -225,7 +219,6 @@
         </div>
       </div>
 
-      <!-- البلدية -->
       <div class="form-group">
         <label>البلدية</label>
         <div class="input-icon-wrapper">
@@ -236,7 +229,6 @@
         </div>
       </div>
 
-      <!-- العنوان الكامل -->
       <div class="form-group full">
         <label>العنوان</label>
         <div class="input-icon-wrapper">
@@ -289,21 +281,50 @@
 <script src="lightbox.js"></script>
 
 <script>
-  // ========== دالة ملء قائمة الولايات من الملف الخارجي ==========
+  // ========== إدارة زر الرجوع للسلة ==========
+  let cartIsOpen = false;
+
+  window.openCart = function() {
+    if (cartIsOpen) return;
+    cartIsOpen = true;
+    history.pushState({ cart: true }, '');
+    document.getElementById('cartOverlay').classList.add('open');
+    document.getElementById('cartPanel').classList.add('open');
+  };
+
+  window.closeCart = function() {
+    if (!cartIsOpen) return;
+    cartIsOpen = false;
+    // إذا كانت الحالة الحالية هي حالة السلة، ارجع خطوة واحدة
+    if (history.state && history.state.cart) {
+      history.back();
+    }
+    document.getElementById('cartOverlay').classList.remove('open');
+    document.getElementById('cartPanel').classList.remove('open');
+  };
+
+  // اعتراض زر الرجوع — إغلاق السلة بدلاً من مغادرة الصفحة
+  window.addEventListener('popstate', function(e) {
+    if (cartIsOpen) {
+      cartIsOpen = false;
+      document.getElementById('cartOverlay').classList.remove('open');
+      document.getElementById('cartPanel').classList.remove('open');
+    }
+  });
+
+  // ========== دالة ملء قائمة الولايات ==========
   function populateWilayas() {
     const wilayaSelect = document.getElementById('fwilaya');
     if (typeof wilayaCommunes === 'undefined') {
-      console.error('❌ ملف data-wilaya.js غير محمل! تأكد من وجوده في نفس المجلد.');
+      console.error('❌ ملف data-wilaya.js غير محمل!');
       return;
     }
-    
     wilayaSelect.innerHTML = '<option value="">الولاية</option>';
     const sortedWilayas = Object.keys(wilayaCommunes).sort((a, b) => {
       const numA = parseInt(a.split(' - ')[0]);
       const numB = parseInt(b.split(' - ')[0]);
       return numA - numB;
     });
-    
     sortedWilayas.forEach(wilayaCode => {
       const option = document.createElement('option');
       option.value = wilayaCode;
@@ -317,7 +338,6 @@
     const wilayaSelect = document.getElementById('fwilaya');
     const communeSelect = document.getElementById('fcommune');
     const selectedWilaya = wilayaSelect.value;
-    
     communeSelect.innerHTML = '<option value="">البلدية</option>';
     if (selectedWilaya && wilayaCommunes && wilayaCommunes[selectedWilaya]) {
       const communes = wilayaCommunes[selectedWilaya];
@@ -342,7 +362,6 @@
 
   const PRODUCT_NAME = "napperons dia";
 
-  // جدول الأسعار: كل مقاس وكل عدد له سعر
   const priceTable = {
     '25 سم': { 2: 1000, 4: 1500, 6: 2000, 10: 2600, 12: 3200, 16: 3900 },
     '30 سم': { 2: 1400, 4: 1800, 6: 2500, 10: 2900, 12: 3600, 16: 4100 },
@@ -351,12 +370,10 @@
     '50 سم': { 2: 2800, 4: 3200, 6: 3700, 10: 4800, 12: 5300, 16: 5900 }
   };
 
-  // تحديث عرض السعر
   function updatePrice() {
     const priceDisplay = document.getElementById('priceDisplay');
     const priceValue = document.getElementById('priceValue');
     const pricePlaceholder = document.getElementById('pricePlaceholder');
-    
     if (selectedSize && selectedQty && priceTable[selectedSize] && priceTable[selectedSize][selectedQty]) {
       currentPrice = priceTable[selectedSize][selectedQty];
       priceValue.textContent = currentPrice;
@@ -369,7 +386,6 @@
     }
   }
 
-  // ========== دوال معرض الصور ==========
   function setMainImage(imgUrl) {
     currentImageUrl = imgUrl;
     document.getElementById('mainImageEl').innerHTML = `<img src="${imgUrl}" style="width:100%; height:100%; object-fit:cover;">`;
@@ -389,7 +405,6 @@
     }));
   }
 
-  // ========== دوال اختيار المقاس والكمية ==========
   window.selectSize = function(el, val) {
     document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
     el.classList.add('active');
@@ -412,24 +427,20 @@
     currentPrice = null;
     document.getElementById('selectedSize').textContent = '— diamétre';
     document.getElementById('selectedQty').textContent = '— اختر العدد';
-    document.querySelectorAll('.size-btn, .qty-btn').forEach(btn => {
-      btn.classList.remove('active');
-    });
+    document.querySelectorAll('.size-btn, .qty-btn').forEach(btn => btn.classList.remove('active'));
     updatePrice();
   }
 
-  // ========== دوال السلة ==========
   window.addToCart = function() {
     if(!selectedSize) return showToast('⚠️ اختر القطر');
     if(!selectedQty) return showToast('⚠️ اختر عدد القطع');
     if(!currentPrice) return showToast('⚠️ لم يتم تحديد السعر بعد');
     if(!currentImageUrl) return showToast('⚠️ حدث خطأ في الصورة');
-    
     cart.push({
-      id: Date.now(), 
-      name: PRODUCT_NAME, 
-      size: selectedSize, 
-      qty: selectedQty, 
+      id: Date.now(),
+      name: PRODUCT_NAME,
+      size: selectedSize,
+      qty: selectedQty,
       price: currentPrice,
       image: currentImageUrl
     });
@@ -465,54 +476,21 @@
     footer.style.display = 'block';
   }
 
-  window.removeItem = function(id) { 
-    cart = cart.filter(i => i.id !== id); 
-    updateCartUI(); 
+  window.removeItem = function(id) {
+    cart = cart.filter(i => i.id !== id);
+    updateCartUI();
     showToast('🗑️ تم إزالة المنتج من السلة');
   };
-  
-  // عند فتح السلة، نضيف حالة للتاريخ
-  function handleCartHistory() {
-    const cartPanel = document.getElementById('cartPanel');
-    if (cartPanel.classList.contains('open')) {
-      window.history.pushState({ cartOpen: true }, "");
-    }
-  }
 
-  // مراقبة الضغط على زر الرجوع
-  window.addEventListener('popstate', function(event) {
-    const cartPanel = document.getElementById('cartPanel');
-    if (cartPanel.classList.contains('open')) {
-      closeCart(); // إغلاق السلة فقط
-    }
-  });
+  window.scrollToForm = function() {
+    document.getElementById('orderForm').scrollIntoView({ behavior: 'smooth' });
+  };
 
-  // لا نعدل على الدوال، فقط نربط الفتح بحالة التاريخ
-  const cartBtn = document.querySelector('.cart-btn');
-  cartBtn.addEventListener('click', () => {
-    setTimeout(handleCartHistory, 100); // تأخير بسيط لضمان فتح السلة أولاً
-  });
-  
-  window.openCart = function() { 
-    document.getElementById('cartOverlay').classList.add('open'); 
-    document.getElementById('cartPanel').classList.add('open'); 
+  window.scrollToFormFromCart = function() {
+    closeCart();
+    setTimeout(scrollToForm, 350);
   };
-  
-  window.closeCart = function() { 
-    document.getElementById('cartOverlay').classList.remove('open'); 
-    document.getElementById('cartPanel').classList.remove('open'); 
-  };
-  
-  window.scrollToForm = function() { 
-    document.getElementById('orderForm').scrollIntoView({ behavior: 'smooth' }); 
-  };
-  
-  window.scrollToFormFromCart = function() { 
-    closeCart(); 
-    setTimeout(scrollToForm, 350); 
-  };
-  
-  // ========== دالة تأكيد الطلب ==========
+
   window.submitOrder = function() {
     const name = document.getElementById('fname').value.trim();
     const phone = document.getElementById('fphone').value.trim();
@@ -520,55 +498,50 @@
     const commune = document.getElementById('fcommune').value;
     const address = document.getElementById('faddress').value.trim();
     const submitBtn = document.getElementById('submitOrderBtn');
-    
+
     if(!name) return showToast('⚠️ الرجاء إدخال الاسم الكامل');
     if(!phone) return showToast('⚠️ الرجاء إدخال رقم الهاتف');
     if(!wilaya) return showToast('⚠️ الرجاء اختيار الولاية');
     if(!commune) return showToast('⚠️ الرجاء اختيار البلدية');
     if(!address) return showToast('⚠️ الرجاء إدخال العنوان الكامل');
-    
+
     const phoneRegex = /^(05|06|07)[0-9]{8}$/;
     if(!phoneRegex.test(phone)) {
       showToast('⚠️ رقم الهاتف غير صحيح (يجب أن يبدأ بـ 05/06/07 ويتكون من 10 أرقام)');
       return;
     }
-    
+
     const nameRegex = /^[a-zA-Z\u0621-\u064A\s]+$/;
     if(!nameRegex.test(name)) {
       showToast('⚠️ يرجى إدخال اسم صحيح (حروف فقط بدون رموز أو أرقام)');
       return;
     }
-    
+
     if(cart.length === 0) {
       showToast('⚠️ السلة فارغة، أضف منتجات أولاً');
       return;
     }
-    
+
     submitBtn.disabled = true;
     submitBtn.innerText = 'جاري الإرسال...';
-    
+
     const orderData = {
-      name: name,
-      phone: phone,
-      wilaya: wilaya,
-      commune: commune,
-      address: address,
-      cart: cart,
-      orderId: (() => { 
-        let d = Array.from({length:6}, () => Math.floor(Math.random()*10)); 
-        let l = Array.from({length:4}, () => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.charAt(Math.floor(Math.random()*26))); 
-        let all = [...d, ...l]; 
-        for(let i=all.length-1; i>0; i--){ 
-          let j = Math.floor(Math.random()*(i+1)); 
-          [all[i], all[j]] = [all[j], all[i]]; 
-        } 
-        return all.join(''); 
+      name, phone, wilaya, commune, address, cart,
+      orderId: (() => {
+        let d = Array.from({length:6}, () => Math.floor(Math.random()*10));
+        let l = Array.from({length:4}, () => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.charAt(Math.floor(Math.random()*26)));
+        let all = [...d, ...l];
+        for(let i=all.length-1; i>0; i--){
+          let j = Math.floor(Math.random()*(i+1));
+          [all[i], all[j]] = [all[j], all[i]];
+        }
+        return all.join('');
       })(),
       orderDate: new Date().toISOString()
     };
-    
+
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzXDnD3FdDHUNbcSKbTOcF_y-WIl38ADCi0bGGthA0HSsQnSL0tNqn0JTFNAJvUMh8v/exec';
-    
+
     fetch(scriptURL, {
       method: 'POST',
       mode: 'no-cors',
@@ -577,7 +550,7 @@
     })
     .then(() => {
       document.getElementById('successModal').classList.add('open');
-      cart = []; 
+      cart = [];
       updateCartUI();
       document.getElementById('fname').value = '';
       document.getElementById('fphone').value = '';
@@ -586,7 +559,6 @@
       document.getElementById('fcommune').disabled = true;
       document.getElementById('faddress').value = '';
       resetSelections();
-      
       submitBtn.disabled = false;
       submitBtn.innerText = '✅ تأكيد الطلب';
     })
@@ -596,19 +568,18 @@
       submitBtn.innerText = '✅ تأكيد الطلب';
     });
   };
-  
-  window.closeModal = function() { 
-    document.getElementById('successModal').classList.remove('open'); 
+
+  window.closeModal = function() {
+    document.getElementById('successModal').classList.remove('open');
   };
-  
-  function showToast(msg) { 
-    const t = document.getElementById('toast'); 
-    t.textContent = msg; 
-    t.classList.add('show'); 
-    setTimeout(() => t.classList.remove('show'), 2800); 
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
   }
-  
-  // ========== تهيئة الصفحة ==========
+
   document.addEventListener('DOMContentLoaded', () => {
     initThumbnails();
     populateWilayas();
@@ -617,4 +588,5 @@
   });
 </script>
 </body>
-          </html>
+</html>
+

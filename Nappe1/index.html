@@ -270,13 +270,13 @@
       font-size: 22px; font-weight: 600;
       color: var(--violet-deep);
       margin-bottom: 6px;
-      display: flex; align-items: center; justify-content: center; /* تم توسيط العنوان */
+      display: flex; align-items: center; justify-content: center;
       gap: 10px;
     }
     .form-subtitle {
       font-size: 13px; color: var(--text-soft);
       margin-bottom: 22px;
-      text-align: center; /* تم توسيط النص */
+      text-align: center;
     }
     .form-grid {
       display: grid;
@@ -299,25 +299,17 @@
       display: flex;
       align-items: center;
     }
-    .input-icon {
-      position: absolute;
-      right: 13px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 16px;
-      pointer-events: none;
-      z-index: 1;
-      opacity: 0.65;
-      transition: opacity .2s;
-    }
-    /* For select: arrow is on the left, icon on the right */
-    .input-icon-wrap select ~ .input-icon {
-      right: 13px;
+    .input-icon-wrap input,
+    .input-icon-wrap select {
+      width: 100%;
     }
 
-    .field-group input, .field-group select {
+    /* تعديل: توحيد ارتفاع input و select */
+    .field-group input,
+    .field-group select {
       width: 100%;
-      padding: 12px 42px 12px 14px;
+      height: 46px;
+      padding: 0 52px 0 14px;
       border: 1.5px solid #DDD2F0;
       border-radius: 10px;
       font-family: 'Cairo', sans-serif;
@@ -342,6 +334,23 @@
       background: var(--white);
     }
     .field-group input::placeholder { color: #B0A0C8; }
+
+    .field-icon {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--violet-deep), var(--violet));
+      border-radius: 0 10px 10px 0;
+      color: var(--gold-light);
+      font-size: 15px;
+      pointer-events: none;
+      flex-shrink: 0;
+    }
 
     /* ── SUBMIT BTN ── */
     .submit-btn {
@@ -374,12 +383,6 @@
       transform: none;
     }
 
-/* تحول الأيقونة إلى الذهبي عند التركيز على الحقل المجاور مباشرة */
-.field-group input:focus + .field-icon,
-.field-group select:focus + .field-icon {
-  background: linear-gradient(135deg, var(--gold), var(--gold-light)); /* خلفية ذهبية متدرجة */
-  color: var(--violet-deep);            /* أيقونة بلون بنفسجي غامق */
-}
     /* ── TRUST ── */
     .trust-bar {
       display: grid;
@@ -448,37 +451,6 @@
       font-size: 14px; font-weight: 700;
       color: var(--violet-deep);
       cursor: pointer;
-    }
-
-    /* ── INPUT WITH ICON ── */
-    .input-icon-wrap {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-    .input-icon-wrap input,
-    .input-icon-wrap select {
-      width: 100%;
-    }
-    .field-icon {
-      position: absolute;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      width: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, var(--violet-deep), var(--violet));
-      border-radius: 0 10px 10px 0;
-      color: var(--gold-light);
-      font-size: 15px;
-      pointer-events: none;
-      flex-shrink: 0;
-    }
-    .field-group input,
-    .field-group select {
-      padding-right: 52px !important;
     }
 
     /* ── FOOTER ── */
@@ -807,4 +779,4 @@
   });
 </script>
 </body>
-          </html>
+</html>

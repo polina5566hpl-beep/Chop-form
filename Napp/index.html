@@ -285,10 +285,8 @@
 <!-- TOAST -->
 <div class="toast" id="toast">✨ تمت إضافة النابيرون إلى السلة!</div>
 
-<!-- ⚠️ مهم: تحميل ملف data-wilaya.js أولاً -->
 <script src="data-wilaya.js"></script>
 <script src="lightbox.js"></script>
-<script src="panier.js"></script>
 
 <script>
   // ========== دالة ملء قائمة الولايات من الملف الخارجي ==========
@@ -473,6 +471,28 @@
     showToast('🗑️ تم إزالة المنتج من السلة');
   };
   
+  // عند فتح السلة، نضيف حالة للتاريخ
+  function handleCartHistory() {
+    const cartPanel = document.getElementById('cartPanel');
+    if (cartPanel.classList.contains('open')) {
+      window.history.pushState({ cartOpen: true }, "");
+    }
+  }
+
+  // مراقبة الضغط على زر الرجوع
+  window.addEventListener('popstate', function(event) {
+    const cartPanel = document.getElementById('cartPanel');
+    if (cartPanel.classList.contains('open')) {
+      closeCart(); // إغلاق السلة فقط
+    }
+  });
+
+  // لا نعدل على الدوال، فقط نربط الفتح بحالة التاريخ
+  const cartBtn = document.querySelector('.cart-btn');
+  cartBtn.addEventListener('click', () => {
+    setTimeout(handleCartHistory, 100); // تأخير بسيط لضمان فتح السلة أولاً
+  });
+  
   window.openCart = function() { 
     document.getElementById('cartOverlay').classList.add('open'); 
     document.getElementById('cartPanel').classList.add('open'); 
@@ -597,4 +617,4 @@
   });
 </script>
 </body>
-  </html>
+          </html>

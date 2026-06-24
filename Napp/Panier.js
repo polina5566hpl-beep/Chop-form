@@ -1,21 +1,31 @@
-  // عند فتح السلة، نضيف حالة للتاريخ
-  function handleCartHistory() {
-    const cartPanel = document.getElementById('cartPanel');
-    if (cartPanel.classList.contains('open')) {
-      window.history.pushState({ cartOpen: true }, "");
-    }
+// دالة لفتح السلة
+function openCart() {
+  const cartPanel = document.getElementById('cartPanel');
+  cartPanel.classList.add('open');
+  
+  // إضافة حالة للسجل عند فتح السلة
+  window.history.pushState({ cartOpen: true }, "");
+}
+
+// دالة لإغلاق السلة
+function closeCart() {
+  const cartPanel = document.getElementById('cartPanel');
+  cartPanel.classList.remove('open');
+}
+
+// مراقبة زر الرجوع
+window.addEventListener('popstate', function(event) {
+  const cartPanel = document.getElementById('cartPanel');
+  
+  // إذا كانت السلة مفتوحة، أغلقها وامنعه من الخروج
+  if (cartPanel.classList.contains('open')) {
+    closeCart();
   }
+});
 
-  // مراقبة الضغط على زر الرجوع
-  window.addEventListener('popstate', function(event) {
-    const cartPanel = document.getElementById('cartPanel');
-    if (cartPanel.classList.contains('open')) {
-      closeCart(); // إغلاق السلة فقط
-    }
-  });
-
-  // لا نعدل على الدوال، فقط نربط الفتح بحالة التاريخ
-  const cartBtn = document.querySelector('.cart-btn');
-  cartBtn.addEventListener('click', () => {
-    setTimeout(handleCartHistory, 100); // تأخير بسيط لضمان فتح السلة أولاً
-  });
+// ربط زر الفتح
+const cartBtn = document.querySelector('.cart-btn');
+cartBtn.addEventListener('click', (e) => {
+  e.preventDefault(); // منع أي سلوك افتراضي
+  openCart();
+});

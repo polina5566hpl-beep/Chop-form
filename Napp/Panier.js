@@ -1,4 +1,3 @@
-
   // عند فتح السلة، نضيف حالة للتاريخ
   function handleCartHistory() {
     const cartPanel = document.getElementById('cartPanel');

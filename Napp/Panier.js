@@ -1,31 +1,40 @@
-const cartPanel = document.getElementById('cartPanel');
+// دالة فتح السلة مع تسجيل حالة في المتصفح
+window.openCart = function() { 
+  const cartPanel = document.getElementById('cartPanel');
+  const cartOverlay = document.getElementById('cartOverlay');
+  
+  cartPanel.classList.add('open'); 
+  cartOverlay.classList.add('open');
+  
+  // إضافة حالة للسجل لكي يتمكن زر الرجوع من إغلاق السلة
+  window.history.pushState({ cartOpen: true }, "Cart");
+};
 
-// دالة لفتح السلة
-function openCart() {
-  cartPanel.classList.add('open');
-  // نضيف حالة جديدة للسجل، المتصفح الآن يظن أننا "دخلنا" صفحة جديدة
-  window.history.pushState({ cartOpen: true }, "");
-}
-
-// دالة لإغلاق السلة
-function closeCart() {
-  cartPanel.classList.remove('open');
-}
-
-// مراقبة الرجوع
-window.addEventListener('popstate', (event) => {
-  // إذا كان السجل يحتوي على حالة السلة، أغلقها فقط
+// دالة إغلاق السلة
+window.closeCart = function() { 
+  const cartPanel = document.getElementById('cartPanel');
+  const cartOverlay = document.getElementById('cartOverlay');
+  
+  // إذا كانت السلة مفتوحة بالفعل، نتحقق من حالة الـ History قبل الرجوع
   if (cartPanel.classList.contains('open')) {
-    closeCart();
-  } else {
-    // إذا لم تكن السلة مفتوحة، اسمح للمتصفح بالرجوع للصفحة السابقة (الخروج)
-    // لا تفعل شيئاً هنا، اترك السلوك الافتراضي يحدث
+    cartPanel.classList.remove('open'); 
+    cartOverlay.classList.remove('open');
+    
+    // إذا كانت الحالة موجودة في السجل، نعود للخلف لإزالتها
+    if (window.history.state && window.history.state.cartOpen) {
+      window.history.back();
+    }
   }
-});
+};
 
-// هذا هو الجزء الأهم: التأكد من أن السلة لا تمنع المتصفح من الرجوع للصفحة السابقة إذا كانت مغلقة
-// نقوم بإضافة "مستمع" لزر الفتح يتأكد من الحالة
-document.querySelector('.cart-btn').addEventListener('click', (e) => {
-  e.preventDefault();
-  openCart();
+// مراقبة حدث الرجوع (Popstate)
+window.addEventListener('popstate', function(event) {
+  const cartPanel = document.getElementById('cartPanel');
+  const cartOverlay = document.getElementById('cartOverlay');
+  
+  // إذا كانت السلة مفتوحة، نغلقها فقط ونمنع خروج المتصفح
+  if (cartPanel.classList.contains('open')) {
+    cartPanel.classList.remove('open'); 
+    cartOverlay.classList.remove('open');
+  }
 });

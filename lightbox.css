@@ -1,0 +1,115 @@
+#lightboxOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 9999;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+}
+
+#lightboxOverlay.active {
+    display: flex;
+}
+
+.lightbox-container {
+    position: relative;
+    width: 100%;    /* تم التعديل: من 98% إلى 100% */
+    height: 100%;   /* تم التعديل: من 98% إلى 100% */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: default;
+    padding: 0;
+    margin: 0;
+}
+
+#lightboxImage {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;  /* يمكنك تغييره إلى cover إذا أردت إزالة الفراغات تماماً مع قص الصورة */
+    cursor: grab;
+    transition: transform 0.3s ease, opacity 0.2s ease;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+#lightboxImage:active {
+    cursor: grabbing;
+}
+
+#lightboxClose {
+    position: fixed;
+    top: 6px;
+    right: 8px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10000;
+    transition: all 0.2s ease;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+#lightboxClose:hover {
+    color: #ff4444;
+    background-color: rgba(0, 0, 0, 0.8);
+    transform: scale(1.1);
+}
+
+#lightboxCounter {
+    position: fixed;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    z-index: 10000;
+    backdrop-filter: blur(5px);
+    pointer-events: none;
+}
+
+@media (max-width: 768px) {
+    .lightbox-container {
+        width: 100%;
+        height: 100%;
+    }
+
+    #lightboxClose {
+        top: 4px;
+        right: 8px;
+        width: 40px;
+        height: 40px;
+        font-size: 30px;
+    }
+    
+    #lightboxCounter {
+        top: 6px;
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+}
+
+body.lightbox-open {
+    overflow: hidden;
+}
